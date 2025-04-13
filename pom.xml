@@ -6,9 +6,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- the id of the project's group -->
-    <groupId>ups</groupId>
+    <groupId>group00</groupId>
     <!-- the id of the artifact (project) -->
-    <artifactId>ups</artifactId>
+    <artifactId>mm</artifactId>
     <!-- the version of the artifact under the specified group -->
     <version>0.1-SNAPSHOT</version>
 
@@ -32,11 +32,17 @@
             <version>5.7.1</version>
             <scope>test</scope>
         </dependency>
+        <!-- JavaFX 17 (compatible with Apple Silicon) -->
         <dependency>
-            <!-- JavaFX - see https://openjfx.io/openjfx-docs/#maven -->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>16</version>
+            <version>17.0.12</version>
+        </dependency>
+        <!-- jbox2d (Box2D Java Port) - see https://mvnrepository.com/artifact/org.jbox2d/jbox2d-library -->
+        <dependency>
+            <groupId>org.jbox2d</groupId>
+            <artifactId>jbox2d-library</artifactId>
+            <version>2.2.1.1</version>
         </dependency>
     </dependencies>
 
@@ -101,13 +107,13 @@
                     <!-- Removes the man directory in the resulting runtime image -->
                     <noManPages>true</noManPages>
                     <!-- Adds a launcher script with the given name -->
-                    <launcher>ups</launcher>
+                    <launcher>mm</launcher>
                     <!-- The name of the folder with the resulting runtime image -->
-                    <jlinkImageName>ups</jlinkImageName>
+                    <jlinkImageName>mm</jlinkImageName>
                     <!-- Create a zip of the resulting runtime image -->
-                    <jlinkZipName>ups</jlinkZipName>
+                    <jlinkZipName>mm</jlinkZipName>
                     <!-- The main class, fully qualified name -->
-                    <mainClass>ups/ups.Main</mainClass>
+                    <mainClass>mm/mm.Main</mainClass>
                     <!-- Make command line arguments setable with -Dargs="" -->
                     <commandlineArgs>${args}</commandlineArgs>
                 </configuration>
@@ -176,8 +182,8 @@
                 <configuration>
                     <excludes>
                         <!-- Ignore GUI classes for coverage -->
-                        <exclude>ups/gui/**/*</exclude>
-                        <exclude>ups/Main.class</exclude>
+                        <exclude>mm/gui/**/*</exclude>
+                        <exclude>mm/Main.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>

@@ -1,4 +1,4 @@
-package ups.model;
+package mm.model;
 
 import org.junit.jupiter.api.Test;
 

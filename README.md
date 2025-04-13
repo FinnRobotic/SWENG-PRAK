@@ -1,4 +1,4 @@
-# UPS - Undead Power Struggle
+# MM - Mad Machines
 
 Bitte hier eine sinnvolle Dokumentation ergänzen!
 

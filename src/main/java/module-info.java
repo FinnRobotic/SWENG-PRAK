@@ -1,9 +1,10 @@
 /**
- * The main module of the ups application.
+ * The main module of the mm application.
  */
-module ups {
+module mm {
     requires javafx.controls;
     requires transitive javafx.graphics;
+    requires jbox2d.library;
     
-    exports ups.gui;
+    exports mm.gui;
 }

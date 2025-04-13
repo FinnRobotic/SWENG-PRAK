@@ -1,4 +1,4 @@
-package ups.model;
+package mm.model;
 
 /**
  * Example model class which should be replaced with your actual implementation.
