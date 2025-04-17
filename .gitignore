@@ -1,0 +1,15 @@
+
+
+
+
+# Exkludiere IDE-Ordner
+
+.idea/
+.vscode/
+
+
+
+# Ignoriere Build-Ordner
+
+target/
+build/

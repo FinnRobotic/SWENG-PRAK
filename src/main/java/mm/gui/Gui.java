@@ -6,41 +6,40 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.text.*;
 
 public class Gui extends Application {
 
-    private String baseText = "   Say 'Hello World!'   "; // padded for smooth loop
-    private int offset = 0;
-
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
-        Button btn = new Button();
-        // registered a lambda function, which is called when the button is clicked
-        btn.setOnAction(event -> {System.out.println("Hello World!");});
+        primaryStage.setTitle("JavaFX Welcome");
 
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        primaryStage.setScene(new Scene(root, 300, 250));
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.TOP_CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        Text scenetitle = new Text("Crazy Machines");
+        scenetitle.setFont(Font.font("Arial", FontWeight.NORMAL, 30));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        Button btn = new Button("Start");
+        HBox hbBtn = new HBox(10);
+        hbBtn.setAlignment(Pos.BOTTOM_CENTER);
+        hbBtn.getChildren().add(btn);
+        grid.add(hbBtn, 1, 4);
+
+        grid.setGridLinesVisible(true);
+
+        Scene scene = new Scene(grid, 300, 275);
+        primaryStage.setScene(scene);
+
         primaryStage.show();
 
-        // Animation loop: scroll text
-        AnimationTimer scrollingTextTimer = new AnimationTimer() {
-            private long lastUpdate = 0;
-
-            // handle is abstract, and has to be implemented in order for an AnimationTimer to be instantiated! (You could create a new class that inherits to keep it clean).
-            @Override
-            public void handle(long now) {
-                // a so called "spin-wait", that checks if 150ms have passed.
-                if (now - lastUpdate >= 150_000_000) {
-                    String scrolled = baseText.substring(offset) + baseText.substring(0, offset);
-                    btn.setText(scrolled);
-                    offset = (offset + 1) % baseText.length();
-                    lastUpdate = now;
-                }
-            }
-        };
-        scrollingTextTimer.start();
 
     }
 
