@@ -1,4 +1,4 @@
-package mm.model;
+package mm.MVC;
 
 /**
  * Example model class which should be replaced with your actual implementation.
