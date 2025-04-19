@@ -7,27 +7,17 @@ import mm.MVC.start.StartController;
 import mm.MVC.start.StartModel;
 import mm.MVC.start.StartView;
 
+import javax.swing.text.View;
+
 public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) {
 
 
-        StartModel model = new StartModel();
-        StartView view = new StartView();
-        view.setModel(model);
-        StartController controller = new StartController();
-        controller.setView(view);
+        ViewManager viewManager = new ViewManager(primaryStage);
 
-
-        primaryStage.setTitle("Crazy Machines");
-
-        Scene scene = new Scene(view, 300, 300);
-
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
-
+        viewManager.showStartView();
 
     }
 
