@@ -1,16 +1,11 @@
 package mm.gui;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.scene.layout.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.text.*;
-import mm.MVC.*;
+import mm.MVC.start.StartController;
+import mm.MVC.start.StartModel;
+import mm.MVC.start.StartView;
 
 public class Gui extends Application {
 
@@ -18,10 +13,10 @@ public class Gui extends Application {
     public void start(Stage primaryStage) {
 
 
-        Model model = new Model();
-        View view = new View();
+        StartModel model = new StartModel();
+        StartView view = new StartView();
         view.setModel(model);
-        Controller controller = new Controller();
+        StartController controller = new StartController();
         controller.setView(view);
 
 
