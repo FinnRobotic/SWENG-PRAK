@@ -1,7 +1,7 @@
 package mm;
 
 import mm.gui.Gui;
-import mm.MVC.Example;
+
 
 /**
  * The common starting point of the GUI.

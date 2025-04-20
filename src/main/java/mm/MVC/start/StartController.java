@@ -1,12 +1,15 @@
 package mm.MVC.start;
 
 
+import mm.gui.ViewManager;
+
 // To be implemented
 public class StartController {
 
-    // Does nothing yet
-    public void setView(StartView view) {
 
+    public void setView(StartView view, ViewManager viewManager) {
+
+        view.getStartButton().setOnAction(actionEvent -> {viewManager.showGameView();});
 
     }
 }

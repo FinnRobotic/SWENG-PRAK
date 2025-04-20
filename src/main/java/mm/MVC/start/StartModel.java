@@ -1,12 +1,14 @@
 package mm.MVC.start;
 
 
-import mm.MVC.util.Observable;
+import mm.MVC.Model;
 
 // To be implemented
-public class StartModel extends Observable {
+public class StartModel extends Model {
 
+    public StartModel() {
 
+    }
 
 
 }
