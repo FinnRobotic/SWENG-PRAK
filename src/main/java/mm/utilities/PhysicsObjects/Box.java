@@ -1,5 +1,7 @@
 package mm.utilities.PhysicsObjects;
 
+import javafx.geometry.Rectangle2D;
+import javafx.scene.shape.Rectangle;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
@@ -18,6 +20,8 @@ public class Box extends RigidBody {
         shape.setAsBox(width/2, height/2);
 
         body.createFixture(shape, 0.0f);
+
+        Rectangle rect = new Rectangle(width, height);
     }
 
 

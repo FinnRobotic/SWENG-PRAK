@@ -39,6 +39,8 @@ public class GameDef {
 
     public int positionIterations;
 
+    public static final int m_to_px_scale = 50;
+
     public void addBody(RigidBody body) {
         this.bodies.add(body);
     }

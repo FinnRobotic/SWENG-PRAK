@@ -1,11 +1,10 @@
 package mm.MVC.game;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import mm.MVC.View;
-import mm.MVC.start.StartModel;
 
 public class GameView extends View {
 
@@ -17,10 +16,8 @@ public class GameView extends View {
 
     public GameView() {
 
-        VBox layout = new VBox(20);
-        layout.setAlignment(Pos.CENTER);
+        Pane layout = new Pane();
 
-        layout.getChildren().addAll(startLabel);
 
         setRoot(layout);
     }
