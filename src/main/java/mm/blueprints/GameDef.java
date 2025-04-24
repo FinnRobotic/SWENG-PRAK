@@ -14,16 +14,7 @@ public class GameDef {
 
 
     }
-
-
-
-
-
-
-
-
-
-
+    
     private int FPS;
 
     public void setFPS(int fps) {
