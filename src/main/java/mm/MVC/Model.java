@@ -1,7 +1,7 @@
 package mm.MVC;
 
 import mm.MVC.util.Observable;
-import mm.blueprints.GameDef;
+import mm.utilities.GameDef;
 
 public class Model extends Observable {
 
@@ -15,14 +15,8 @@ public class Model extends Observable {
         return this.gameDef;
     }
 
-    public void setFPS(int fps) {
-        this.gameDef.setFPS(fps);
-        notifyObservers();
-    }
-
-    public void setDifficulty(GameDef.Difficulty difficulty) {
-        this.gameDef.setDifficulty(difficulty);
-        notifyObservers();
+    public void setGameDef(GameDef gameDef) {
+        this.gameDef = gameDef;
     }
 
 

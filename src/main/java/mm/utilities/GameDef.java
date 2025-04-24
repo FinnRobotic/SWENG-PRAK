@@ -1,4 +1,7 @@
-package mm.blueprints;
+package mm.utilities;
+
+import mm.utilities.PhysicsObjects.RigidBody;
+import org.jbox2d.common.Vec2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +15,29 @@ public class GameDef {
 
         this.difficulty = Difficulty.MEDIUM;
 
+        this.gravity = new Vec2(0.0f,-9.81f);
+
+        this.optimizeSimulation = false;
+
+        this.velocityIterations = 6;
+
+        this.positionIterations = 2;
 
     }
     
-    private int FPS;
+    public int FPS;
 
-    public void setFPS(int fps) {
-        this.FPS = fps;
-    }
+    public List<RigidBody> bodies = new ArrayList<>();
 
-    public int getFPS() {
-        return this.FPS;
-    }
+    public Vec2 gravity;
 
+    public Difficulty difficulty;
 
-    private List<RigidBody> bodies = new ArrayList<RigidBody>();
+    public boolean optimizeSimulation;
+
+    public int velocityIterations;
+
+    public int positionIterations;
 
     public void addBody(RigidBody body) {
         this.bodies.add(body);
@@ -56,14 +67,7 @@ public class GameDef {
         }
     }
 
-    private Difficulty difficulty;
 
-    public Difficulty getDifficulty() {
-        return this.difficulty;
-    }
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
 
 
 }

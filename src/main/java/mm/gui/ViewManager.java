@@ -2,6 +2,7 @@ package mm.gui;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import mm.MVC.Model;
 import mm.MVC.game.GameController;
 import mm.MVC.game.GameModel;
 import mm.MVC.game.GameView;
@@ -13,6 +14,7 @@ public class ViewManager {
 
     private Stage stage;
     private Scene scene;
+    private Model currentModel;
 
 
     public ViewManager(Stage stage) {
@@ -21,9 +23,9 @@ public class ViewManager {
 
 
     public void showStartView() {
-        StartModel model = new StartModel();
+        currentModel = new StartModel();
         StartView view = new StartView();
-        view.setModel(model);
+        view.setModel(currentModel);
         StartController controller = new StartController();
         controller.setView(view, this);
         scene = new Scene(view.getRoot(),500,500);
@@ -32,13 +34,16 @@ public class ViewManager {
     }
 
     public void showGameView() {
-        GameModel model = new GameModel();
+        currentModel = new GameModel(currentModel);
+
         GameView view = new GameView();
-        view.setModel(model);
+
+        view.setModel(currentModel);
         GameController controller = new GameController();
         controller.setView(view);
         scene = new Scene(view.getRoot(),500,500);
         stage.setScene(scene);
+
     }
 
 
