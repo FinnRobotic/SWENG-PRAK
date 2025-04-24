@@ -1,5 +1,6 @@
 package mm.model;
 
+import mm.MVC.Example;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
