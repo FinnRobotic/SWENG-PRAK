@@ -13,8 +13,14 @@ public class GameModel extends Model {
 
     private World world;
 
+    private long lastUpdate;
+    private float accumulator;
+
     public GameModel(Model StartModel){
         this.setGameDef(StartModel.getGameDef());
+
+        this.lastUpdate = 0;
+        this.accumulator = 0;
 
         Vec2 gravity = this.getGameDef().gravity;
         this.world = new World(gravity);
@@ -27,6 +33,23 @@ public class GameModel extends Model {
 
     }
 
+
+    public float getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(float lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public float getAccumulator() {
+        return accumulator;
+    }
+
+    public void incrAccumulator(float deltaTime) {
+        this.accumulator+= deltaTime;
+    }
+
     public void simStep() {
 
         world.step(1.0f/this.getGameDef().FPS,
@@ -35,6 +58,8 @@ public class GameModel extends Model {
 
 
     }
+
+
 
 
 }
