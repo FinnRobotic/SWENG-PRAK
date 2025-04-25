@@ -1,44 +1,52 @@
 package mm.MVC.game;
 
 
-import mm.MVC.Model;
+import mm.MVC.start.StartModel;
+import mm.MVC.util.Observable;
+import mm.utilities.GameDef;
 import mm.utilities.PhysicsObjects.Box;
-import mm.utilities.PhysicsObjects.RigidBody;
-import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
 
+import static mm.utilities.Makros.*;
 
-public class GameModel extends Model {
+public class GameModel extends Observable {
 
     private World world;
 
     private long lastUpdate;
     private float accumulator;
+    private boolean simRunning;
 
-    public GameModel(Model StartModel){
-        this.setGameDef(StartModel.getGameDef());
+    private GameDef gameDef;
+
+    public GameModel(GameDef gamedef){
+        this.gameDef = gamedef;
 
         this.lastUpdate = 0;
         this.accumulator = 0;
+        this.simRunning = false;
 
         Vec2 gravity = this.getGameDef().gravity;
         this.world = new World(gravity);
-
-        Box ground = new Box(0.0f, -10.0f, 100, 20, this.world);
-
+        initPlayground();
         // 3. Einen fallenden Kasten
-        Box box = new Box(0.0f, 4.0f, 2, 2, 1.0f,0.3f,this.world);
+        Box box = new Box(5.5f, 5, 0, 2, 2, 1.0f,0.3f,this.world);
         this.getGameDef().addBody(box);
 
     }
 
+    public GameDef getGameDef() {
+        return this.gameDef;
+    }
 
-    public float getLastUpdate() {
+
+
+    public long getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(float lastUpdate) {
+    public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -50,16 +58,46 @@ public class GameModel extends Model {
         this.accumulator+= deltaTime;
     }
 
+    public void resetAccumulator() {
+        this.accumulator = 0;
+    }
+
     public void simStep() {
 
         world.step(1.0f/this.getGameDef().FPS,
                     this.getGameDef().velocityIterations,
                     this.getGameDef().positionIterations);
+        notifyObservers();
+    }
 
+    public boolean isSimRunning() {
+        return this.simRunning;
+    }
 
+    public void toggleSimRunning() {
+        this.simRunning = !this.simRunning;
+        notifyObservers();
     }
 
 
+    private void initPlayground() {
 
+        float gamePaneWidthMeter = GAMEPANE_WIDTH * px_to_m_scale;
+        float gamePaneHeightMeter = GAMEPANE_HEIGHT * px_to_m_scale;
+
+
+        Box ground = new Box(gamePaneWidthMeter /2, -1, 0,
+                                    gamePaneWidthMeter, 2,this.world);
+
+        Box ceiling = new Box(gamePaneWidthMeter /2, gamePaneHeightMeter + 1.495f, 0,
+                                    gamePaneWidthMeter, 2,this.world);
+
+        Box leftWall = new Box(-1, gamePaneHeightMeter / 2, 0, 2,
+                                    gamePaneHeightMeter, this.world);
+
+        Box rightWall = new Box(gamePaneWidthMeter + 1, gamePaneHeightMeter / 2, 0, 2,
+                                    gamePaneHeightMeter, this.world);
+
+    }
 
 }

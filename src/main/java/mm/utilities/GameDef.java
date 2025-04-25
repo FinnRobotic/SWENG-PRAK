@@ -23,6 +23,10 @@ public class GameDef {
 
         this.positionIterations = 2;
 
+        this.worldSizeX = 10;
+
+        this.worldSizeY = 10;
+
     }
     
     public int FPS;
@@ -39,7 +43,9 @@ public class GameDef {
 
     public int positionIterations;
 
-    public static final int m_to_px_scale = 50;
+    public int worldSizeX;
+
+    public int worldSizeY;
 
     public void addBody(RigidBody body) {
         this.bodies.add(body);

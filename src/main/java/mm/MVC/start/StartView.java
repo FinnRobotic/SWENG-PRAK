@@ -41,6 +41,19 @@ public class StartView extends View {
     }
 
 
+    public StartModel getModel() {
+
+        return this.model;
+    }
+
+    
+    public void setModel(StartModel model) {
+        this.model = model ;
+        model.addObserver(this);
+        update();
+    }
+
+
     @Override
     public void update() {
 

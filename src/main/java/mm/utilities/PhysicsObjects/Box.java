@@ -1,6 +1,6 @@
 package mm.utilities.PhysicsObjects;
 
-import javafx.geometry.Rectangle2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.BodyDef;
@@ -8,12 +8,26 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
+import static mm.utilities.Makros.m_to_px_scale;
+
 public class Box extends RigidBody {
 
-    public Box(float x, float y, float width, float height, World world) {
+    private Rectangle rect;
+
+    public float height;
+    public float width;
+
+
+    public Box(float x, float y, float gradAngle, float width, float height, World world) {
+
+        this.height = height;
+        this.width = width;
+
+
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(x, y);
         bodydef.type = BodyType.STATIC;
+        bodydef.angle = (float) Math.toRadians(gradAngle);
         body = world.createBody(bodydef);
 
         PolygonShape shape = new PolygonShape();
@@ -21,14 +35,20 @@ public class Box extends RigidBody {
 
         body.createFixture(shape, 0.0f);
 
-        Rectangle rect = new Rectangle(width, height);
+        rect = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.DODGERBLUE);
+        rect.setX(-width* m_to_px_scale/ 2.0f);
+        rect.setY(-height* m_to_px_scale/ 2.0f);
+        rect.setTranslateX(x * m_to_px_scale + 200 + width * m_to_px_scale / 2.0f);
+        rect.setTranslateY(-y * m_to_px_scale);
+        rect.setRotate(gradAngle);
     }
 
 
-    public Box(float x, float y, float width, float height,float density, float friction, World world) {
+    public Box(float x, float y, float gradAngle, float width, float height,float density, float friction, World world) {
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(x, y);
         bodydef.type = BodyType.DYNAMIC;
+        bodydef.angle = (float) Math.toRadians(gradAngle);
         body = world.createBody(bodydef);
 
         PolygonShape shape = new PolygonShape();
@@ -39,5 +59,17 @@ public class Box extends RigidBody {
         fixtureDef.density = density;
         fixtureDef.friction = friction;
         body.createFixture(fixtureDef);
+
+        rect = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.DODGERBLUE);
+        rect.setX(-width* m_to_px_scale/ 2.0f);
+        rect.setY(-height* m_to_px_scale/ 2.0f);
+        rect.setTranslateX(x * m_to_px_scale);
+        rect.setTranslateY(500 - y * m_to_px_scale);
+        rect.setRotate(gradAngle);
     }
+    @Override
+    public Rectangle getShape() {
+        return this.rect;
+    }
+
 }

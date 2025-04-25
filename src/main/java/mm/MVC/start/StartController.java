@@ -9,7 +9,7 @@ public class StartController {
 
     public void setView(StartView view, ViewManager viewManager) {
 
-        view.getStartButton().setOnAction(actionEvent -> {viewManager.showGameView();});
+        view.getStartButton().setOnAction(actionEvent -> {viewManager.showGameView(view.getModel().getGameDef());});
 
     }
 }

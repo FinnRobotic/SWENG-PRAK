@@ -1,30 +1,18 @@
 package mm.MVC;
 
-import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
 import mm.MVC.util.Observer;
 
 public abstract class View implements Observer {
 
-    private Parent root;
+    private Pane root;
 
-    private Model model;
-
-    public Parent getRoot() {
+    public Pane getRoot() {
         return this.root;
     }
 
-    public void setRoot(Parent root) {
+    public void setRoot(Pane root) {
         this.root = root;
     }
 
-    public Model getModel() {
-
-        return this.model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
-        model.addObserver(this);
-        update();
-    }
 }
