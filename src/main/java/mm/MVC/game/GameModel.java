@@ -31,7 +31,7 @@ public class GameModel extends Observable {
         this.world = new World(gravity);
         initPlayground();
         // 3. Einen fallenden Kasten
-        Box box = new Box(5.5f, 5, 0, 2, 2, 1.0f,0.3f,this.world);
+        Box box = new Box(5.5f, 4, 45, 0.5f, 5, 0.01f,0.3f,this.world);
         this.getGameDef().addBody(box);
 
     }

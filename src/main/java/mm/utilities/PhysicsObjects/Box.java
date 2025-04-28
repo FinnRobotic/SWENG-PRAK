@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
+import static mm.utilities.Makros.GAMEPANE_HEIGHT;
 import static mm.utilities.Makros.m_to_px_scale;
 
 public class Box extends RigidBody {
@@ -35,12 +36,14 @@ public class Box extends RigidBody {
 
         body.createFixture(shape, 0.0f);
 
+
+
         rect = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.DODGERBLUE);
         rect.setX(-width* m_to_px_scale/ 2.0f);
         rect.setY(-height* m_to_px_scale/ 2.0f);
-        rect.setTranslateX(x * m_to_px_scale + 200 + width * m_to_px_scale / 2.0f);
-        rect.setTranslateY(-y * m_to_px_scale);
-        rect.setRotate(gradAngle);
+        rect.setTranslateX(body.getPosition().x * m_to_px_scale);
+        rect.setTranslateY(GAMEPANE_HEIGHT - body.getPosition().y * m_to_px_scale);
+        rect.setRotate(-Math.toDegrees(body.getAngle()));
     }
 
 
