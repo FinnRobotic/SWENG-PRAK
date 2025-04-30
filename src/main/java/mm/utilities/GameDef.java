@@ -11,17 +11,17 @@ public class GameDef {
 
 
     public GameDef() {
-        this.FPS = 60;
+        this.FPS = 120;
 
         this.difficulty = Difficulty.MEDIUM;
 
-        this.gravity = new Vec2(0.0f,-9.81f);
+        this.gravity = new Vec2(0,-9.81f);
 
         this.optimizeSimulation = false;
 
-        this.velocityIterations = 6;
+        this.velocityIterations = 8;
 
-        this.positionIterations = 2;
+        this.positionIterations = 4;
 
         this.worldSizeX = 10;
 

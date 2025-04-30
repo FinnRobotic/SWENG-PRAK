@@ -1,9 +1,12 @@
 package mm.MVC.game;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Shape;
+import javafx.stage.Screen;
 import mm.MVC.View;
 import mm.utilities.PhysicsObjects.RigidBody;
 
@@ -22,9 +25,10 @@ public class GameView extends View {
 
     public GameView() {
 
-        gamePane = new Pane(); // Hier spielt die Action
-        gamePane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH); // Deine Spielgröße
-        gamePane.setStyle("-fx-background-color: lightgray;"); // Nur zur Ansicht
+        gamePane = new Pane();
+        gamePane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH);
+        gamePane.setStyle("-fx-background-color: lightgray;");
+
 
 
         VBox sidebarLeft = new VBox();
@@ -87,6 +91,9 @@ public class GameView extends View {
         for(RigidBody bd : model.getGameDef().getBodies()) {
             gamePane.getChildren().add(bd.getShape());
         }
+        for(Node sh : gamePane.getChildren()) {
+            System.out.println(sh.getTranslateX()  +", " +sh.getTranslateY());
+        };
     }
 
     public GameModel getModel() {

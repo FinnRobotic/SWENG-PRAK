@@ -8,20 +8,15 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
+import static mm.utilities.Makros.GAMEPANE_HEIGHT;
 import static mm.utilities.Makros.m_to_px_scale;
 
 public class Box extends RigidBody {
 
     private Rectangle rect;
 
-    public float height;
-    public float width;
-
 
     public Box(float x, float y, float gradAngle, float width, float height, World world) {
-
-        this.height = height;
-        this.width = width;
 
 
         BodyDef bodydef = new BodyDef();
@@ -38,8 +33,8 @@ public class Box extends RigidBody {
         rect = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.DODGERBLUE);
         rect.setX(-width* m_to_px_scale/ 2.0f);
         rect.setY(-height* m_to_px_scale/ 2.0f);
-        rect.setTranslateX(x * m_to_px_scale + 200 + width * m_to_px_scale / 2.0f);
-        rect.setTranslateY(-y * m_to_px_scale);
+        rect.setTranslateX(x * m_to_px_scale);
+        rect.setTranslateY(GAMEPANE_HEIGHT- y * m_to_px_scale);
         rect.setRotate(gradAngle);
     }
 
@@ -64,7 +59,7 @@ public class Box extends RigidBody {
         rect.setX(-width* m_to_px_scale/ 2.0f);
         rect.setY(-height* m_to_px_scale/ 2.0f);
         rect.setTranslateX(x * m_to_px_scale);
-        rect.setTranslateY(500 - y * m_to_px_scale);
+        rect.setTranslateY(GAMEPANE_HEIGHT - y * m_to_px_scale);
         rect.setRotate(gradAngle);
     }
     @Override
