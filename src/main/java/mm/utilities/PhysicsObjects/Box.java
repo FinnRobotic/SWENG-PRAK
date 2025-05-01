@@ -10,7 +10,6 @@ import org.jbox2d.dynamics.World;
 
 import static mm.utilities.Makros.GAMEPANE_HEIGHT;
 import static mm.utilities.Makros.m_to_px_scale;
-
 public class Box extends RigidBody {
 
     private Rectangle rect;
