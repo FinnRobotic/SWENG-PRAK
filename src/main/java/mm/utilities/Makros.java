@@ -24,4 +24,7 @@ public class Makros {
     public static final float GAMEPANE_HEIGHT = (float)Screen.getPrimary().getVisualBounds().getHeight() - BOTTOMBAR_HEIGHT;
 
     public static final float GAMEPANE_WIDTH = (float)Screen.getPrimary().getVisualBounds().getWidth() - SIDEBAR_LEFT_WIDTH - SIDEBAR_RIGHT_WIDTH;
+
+    public static final float SETTINGS_WIDTH = 400;
+    public static final float SETTINGS_HEIGHT = 200;
 }
