@@ -27,4 +27,9 @@ public class Makros {
 
     public static final float SETTINGS_WIDTH = 400;
     public static final float SETTINGS_HEIGHT = 200;
+
+    public static final int FPS_MIN = 30;
+    public static final int FPS_MAX = 240;
+    public static final int FPS_DEFAULT = 120;
+
 }
