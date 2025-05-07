@@ -41,7 +41,7 @@ public class StartController {
 
 
 
-        view.getMediumLevelButton().setOnAction(e -> loadEasyLevel());
+        view.getMediumLevelButton().setOnAction(e -> loadEasyLevel(view, viewManager));
 
 
 
@@ -69,7 +69,7 @@ public class StartController {
         });
     }
 
-    public void loadEasyLevel() {
+    public void loadEasyLevel(StartView view,ViewManager viewManager) {
         String filePath = "src/main/resources/level/medium.json";
         try {
             Level level = JSONLevelIO.loadLevelFromFile(filePath);
@@ -77,6 +77,8 @@ public class StartController {
             // Ausgabe der geladenen Level-Daten
             System.out.println("Level Name: " + level.getName());
             System.out.println("Difficulty: " + level.getDifficulty());
+            viewManager.showGameView(level,view.getModel().getGameDef());
+
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Fehler beim Laden des Levels.");

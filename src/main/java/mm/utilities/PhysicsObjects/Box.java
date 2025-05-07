@@ -2,6 +2,7 @@ package mm.utilities.PhysicsObjects;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import mm.utilities.ObjectsConf.BoxConf;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
@@ -40,7 +41,7 @@ public class Box extends RigidBody {
         rect.setY(-height* m_to_px_scale/ 2.0f);
         rect.setTranslateX(x * m_to_px_scale);
         rect.setTranslateY(GAMEPANE_HEIGHT- y * m_to_px_scale);
-        rect.setRotate(gradAngle);
+        rect.setRotate(-gradAngle);
     }
 
 
@@ -70,8 +71,62 @@ public class Box extends RigidBody {
         rect.setY(-height* m_to_px_scale/ 2.0f);
         rect.setTranslateX(x * m_to_px_scale);
         rect.setTranslateY(GAMEPANE_HEIGHT - y * m_to_px_scale);
-        rect.setRotate(gradAngle);
+        rect.setRotate(-gradAngle);
     }
+
+    public Box(BoxConf conf, World world) {
+        this.width = conf.width;
+        this.height = conf.height;
+
+        if(conf.density == -1 || conf.friction == -1){
+            BodyDef bodydef = new BodyDef();
+            bodydef.position.set(conf.x, conf.y);
+            bodydef.type = BodyType.STATIC;
+            bodydef.angle = (float) Math.toRadians(conf.angle);
+            body = world.createBody(bodydef);
+
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(width/2, height/2);
+
+            body.createFixture(shape, 0.0f);
+
+            rect = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.DODGERBLUE);
+            rect.setX(-width* m_to_px_scale/ 2.0f);
+            rect.setY(-height* m_to_px_scale/ 2.0f);
+            rect.setTranslateX(conf.x * m_to_px_scale);
+            rect.setTranslateY(GAMEPANE_HEIGHT- conf.y * m_to_px_scale);
+            rect.setRotate(-conf.angle);
+
+        } else {
+            BodyDef bodydef = new BodyDef();
+            bodydef.position.set(conf.x, conf.y);
+            bodydef.type = BodyType.DYNAMIC;
+            bodydef.angle = (float) Math.toRadians(conf.angle);
+            body = world.createBody(bodydef);
+
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(width/2, height/2);
+
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = shape;
+            fixtureDef.density = conf.density;
+            fixtureDef.friction = conf.friction;
+            body.createFixture(fixtureDef);
+
+            rect = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.DODGERBLUE);
+            rect.setX(-width* m_to_px_scale/ 2.0f);
+            rect.setY(-height* m_to_px_scale/ 2.0f);
+            rect.setTranslateX(conf.x * m_to_px_scale);
+            rect.setTranslateY(GAMEPANE_HEIGHT - conf.y * m_to_px_scale);
+            rect.setRotate(-conf.angle);
+
+        }
+
+
+    }
+
+
+
     @Override
     public Rectangle getShape() {
         return this.rect;

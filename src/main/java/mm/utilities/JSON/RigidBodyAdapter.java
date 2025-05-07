@@ -4,9 +4,7 @@ import com.google.gson.*;
 import mm.utilities.ObjectsConf.BallConf;
 import mm.utilities.ObjectsConf.BoxConf;
 import mm.utilities.ObjectsConf.ObjectConf;
-import mm.utilities.PhysicsObjects.Ball;
-import mm.utilities.PhysicsObjects.Box;
-import mm.utilities.PhysicsObjects.RigidBody;
+
 
 import java.lang.reflect.Type;
 
@@ -24,19 +22,22 @@ public class RigidBodyAdapter implements JsonDeserializer<ObjectConf>, JsonSeria
                 float ballX = jsonObject.get("x").getAsFloat();
                 float ballY = jsonObject.get("y").getAsFloat();
                 float radius = jsonObject.get("radius").getAsFloat();
+                float BallAngle = jsonObject.has("angle") ? jsonObject.get("angle").getAsFloat() : 0;
+                float BallDensity = jsonObject.has("density") ? jsonObject.get("density").getAsFloat() : -1;
+                float BallFriction = jsonObject.has("friction") ? jsonObject.get("friction").getAsFloat() : -1;
                 // BallConf-Konstruktor aufrufen und zurückgeben
-                return new BallConf(ballX, ballY, radius);
+                return new BallConf(ballX, ballY, radius,BallAngle,BallDensity,BallFriction);
             case "Box":
                 // Extrahiere die Werte aus dem JSON und rufe den Konstruktor für BoxConf auf
                 float boxX = jsonObject.get("x").getAsFloat();
                 float boxY = jsonObject.get("y").getAsFloat();
                 float width = jsonObject.get("width").getAsFloat();
                 float height = jsonObject.get("height").getAsFloat();
-                float angle = jsonObject.has("angle") ? jsonObject.get("angle").getAsFloat() : 0;
-                float density = jsonObject.has("density") ? jsonObject.get("density").getAsFloat() : -1;
-                float friction = jsonObject.has("friction") ? jsonObject.get("friction").getAsFloat() : -1;
+                float BoxAngle = jsonObject.has("angle") ? jsonObject.get("angle").getAsFloat() : 0;
+                float BoxDensity = jsonObject.has("density") ? jsonObject.get("density").getAsFloat() : -1;
+                float BoxFriction = jsonObject.has("friction") ? jsonObject.get("friction").getAsFloat() : -1;
                 // BoxConf-Konstruktor aufrufen und zurückgeben
-                return new BoxConf(boxX, boxY, width, height, angle, density, friction);
+                return new BoxConf(boxX, boxY, width, height, BoxAngle, BoxDensity, BoxFriction);
             default:
                 throw new JsonParseException("Unbekannter Typ: " + type);
         }

@@ -9,6 +9,7 @@ import mm.MVC.start.StartController;
 import mm.MVC.start.StartModel;
 import mm.MVC.start.StartView;
 import mm.utilities.GameDef;
+import mm.utilities.Level;
 
 public class ViewManager {
 
@@ -33,8 +34,9 @@ public class ViewManager {
         stage.show();
     }
 
-    public void showGameView(GameDef gamedef) {
-        GameModel model = new GameModel(gamedef);
+    public void showGameView(Level level, GameDef gamedef) {
+
+        GameModel model = new GameModel(gamedef, level);
 
         GameView view = new GameView();
 

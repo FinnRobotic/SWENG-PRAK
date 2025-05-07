@@ -7,6 +7,7 @@ import mm.utilities.PhysicsObjects.Ball;
 import mm.utilities.PhysicsObjects.Box;
 import mm.utilities.PhysicsObjects.RigidBody;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +16,8 @@ public class GameDef {
 
 
 
-    public GameDef(Level level) {
+    public GameDef() {
         this.FPS = 120;
-
-        this.difficulty = level.getDifficulty();
-
-        this.gravity = level.getGravity();
 
         this.optimizeSimulation = false;
 
@@ -31,8 +28,6 @@ public class GameDef {
         this.worldSizeX = 10;
 
         this.worldSizeY = 10;
-
-        createBodies(level.getObjects());
 
     }
     
@@ -67,25 +62,25 @@ public class GameDef {
     }
 
 
-    private void createBodies(List<ObjectConf> objects) {
+    private void createBodies(List<ObjectConf> objects, World world) {
         for (ObjectConf object : objects) {
             switch (object.getClass().getSimpleName()) {
                 case "BallConf":
                     // Umwandeln von ObjectConf zu BallConf und Erstellen eines Balls
                     BallConf ballConf = (BallConf) object;
-                    Ball ball = new Ball(ballConf.x, ballConf.y, ballConf.radius);
+                    Ball ball = new Ball(ballConf, world);
                     System.out.println("Dies ist ein Ball: x = " + ballConf.x + ", y = " + ballConf.y + ", radius = " + ballConf.radius);
-                    // Füge den Ball hier zu einer Liste oder der Szene hinzu (falls nötig)
-                    // z.B. ballsList.add(ball);
+                    addBody(ball);
+
                     break;
 
                 case "BoxConf":
                     // Umwandeln von ObjectConf zu BoxConf und Erstellen einer Box
                     BoxConf boxConf = (BoxConf) object;
-                    Box box = new Box(boxConf.x, boxConf.y, boxConf.angle, boxConf.width, boxConf.height);
+                    Box box = new Box(boxConf, world);
                     System.out.println("Dies ist eine Box: x = " + boxConf.x + ", y = " + boxConf.y + ", width = " + boxConf.width + ", height = " + boxConf.height);
-                    // Füge die Box hier zu einer Liste oder der Szene hinzu (falls nötig)
-                    // z.B. boxesList.add(box);
+                    addBody(box);
+
                     break;
 
                 default:
@@ -95,5 +90,16 @@ public class GameDef {
             }
         }
     }
+
+    public void integrateLevel(Level level, World world) {
+
+        createBodies(level.getObjects(), world);
+
+        difficulty = level.getDifficulty();
+
+        gravity = level.getGravity();
+
+    }
+
 
 }
