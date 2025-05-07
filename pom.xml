@@ -121,6 +121,11 @@
                     <mainClass>mm/mm.Main</mainClass>
                     <!-- Make command line arguments setable with -Dargs="" -->
                     <commandlineArgs>${args}</commandlineArgs>
+
+                    <options>
+                        <option>--add-opens=javafx.graphics/javafx.scene=ALL-UNNAMED</option>
+                    </options>
+
                 </configuration>
             </plugin>
         </plugins>

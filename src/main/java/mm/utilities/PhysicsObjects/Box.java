@@ -14,9 +14,15 @@ public class Box extends RigidBody {
 
     private Rectangle rect;
 
+    private float width;
+    private float height;
+
 
     public Box(float x, float y, float gradAngle, float width, float height, World world) {
 
+
+        this.width = width;
+        this.height = height;
 
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(x, y);
@@ -39,6 +45,11 @@ public class Box extends RigidBody {
 
 
     public Box(float x, float y, float gradAngle, float width, float height,float density, float friction, World world) {
+
+        this.width = width;
+        this.height = height;
+
+
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(x, y);
         bodydef.type = BodyType.DYNAMIC;
@@ -65,5 +76,15 @@ public class Box extends RigidBody {
     public Rectangle getShape() {
         return this.rect;
     }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+
 
 }

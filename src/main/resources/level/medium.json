@@ -1,0 +1,19 @@
+{
+  "name": "Simple Ball Test",
+  "difficulty": "MEDIUM",
+  "gravity": {
+    "x": 0.0,
+    "y": -9.81
+  },
+  "objects": [
+    {
+      "type": "Ball",
+      "x": 2.5,
+      "y": 2.5,
+      "radius": 2.0,
+      "dynamic": true,
+      "density": 1.0,
+      "friction": 0.5
+    }
+  ]
+}

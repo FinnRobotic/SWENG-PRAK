@@ -12,7 +12,6 @@ import mm.MVC.View;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 import javafx.scene.Scene;
-import mm.utilities.GameDef;
 import mm.utilities.Difficulty;
 
 import static mm.utilities.Makros.*;
@@ -33,6 +32,21 @@ public class StartView extends View {
     private VBox popupLayout = new VBox(15);
     private Scene popupScene = new Scene(popupLayout, SETTINGS_WIDTH, SETTINGS_HEIGHT);
 
+
+    VBox levelOverlay;
+    Button confirmButton = new Button("Level starten");
+    Button cancelButton = new Button("Zurück");
+    Button selectEasyLevelButton = new Button("Easy");
+    Button selectMediumLevelButton = new Button("Medium");
+    Button selectHardLevelButton = new Button("Hard");
+    Button selectCustomLevelButton = new Button("Custom Level");
+
+
+
+
+
+
+
     private StartModel model;
 
     public StartView() {
@@ -44,7 +58,7 @@ public class StartView extends View {
         mainLayout.getChildren().addAll(startLabel, startButton, settingsButton);
 
         // Overlay-Placeholder vorbereiten
-        VBox levelOverlay = createLevelOverlay();
+        levelOverlay = createLevelOverlay();
         levelOverlay.setVisible(false); // Nur anzeigen, wenn gebraucht
 
         root.getChildren().addAll(mainLayout, levelOverlay);
@@ -100,6 +114,27 @@ public class StartView extends View {
         return saveSettingsButton;
     }
 
+    public Button getConfirmButton() {
+        return confirmButton;
+    }
+
+    public Button getCancelButton() {
+        return cancelButton;
+    }
+
+
+    public Button getEasyLevelButton() {
+        return selectEasyLevelButton;
+    }
+
+    public Button getMediumLevelButton() {
+        return selectMediumLevelButton;
+    }
+
+    public Button getCustomLevelButton() {
+        return selectCustomLevelButton;
+    }
+
     public ComboBox<Difficulty> getDifficultyBox() {
         return difficultyBox;
     }
@@ -130,32 +165,27 @@ public class StartView extends View {
           }else  {
               popup.close();
           }
+
+          levelOverlay.setVisible(model.getShowLevelOverlay());
+
     }
 
     private VBox createLevelOverlay() {
         VBox overlay = new VBox(10);
         overlay.setAlignment(Pos.CENTER);
-        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); -fx-padding: 20;");
+        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 1); -fx-padding: 20;");
         overlay.setMaxWidth(400);
         overlay.setMaxHeight(300);
 
         Label title = new Label("Level auswählen");
         title.getStyleClass().add("label-title");
 
-        ComboBox<String> levelSelector = new ComboBox<>();
-        levelSelector.getItems().addAll("Leicht", "Mittel", "Schwer", "Benutzerdefiniert...");
-        levelSelector.getSelectionModel().selectFirst();
 
-        Button confirmButton = new Button("Level starten");
-        Button cancelButton = new Button("Zurück");
+        HBox selectLevel = new HBox(10, selectEasyLevelButton, selectMediumLevelButton, selectHardLevelButton);
+        HBox cancelButtonRow = new HBox(10, confirmButton, cancelButton);
+        cancelButtonRow.setAlignment(Pos.CENTER);
 
-        HBox buttonRow = new HBox(10, confirmButton, cancelButton);
-        buttonRow.setAlignment(Pos.CENTER);
-
-        overlay.getChildren().addAll(title, levelSelector, buttonRow);
-
-        // Verhalten hier optional (du kannst später auch Listener im Controller setzen)
-        cancelButton.setOnAction(e -> overlay.setVisible(false));
+        overlay.getChildren().addAll(title, selectLevel,selectCustomLevelButton, cancelButtonRow);
 
         return overlay;
     }

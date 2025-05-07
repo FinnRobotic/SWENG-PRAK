@@ -27,6 +27,10 @@ public class StartModel extends Observable {
         return showSettings;
     }
 
+    public Boolean getShowLevelOverlay() {
+        return showLevelOverlay;
+    }
+
     public StartModel() {
         this.gameDef = new GameDef();
     }

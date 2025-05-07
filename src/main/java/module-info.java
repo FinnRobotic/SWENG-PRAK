@@ -9,4 +9,9 @@ module mm {
     requires com.google.gson;
 
     exports mm.gui;
+
+
+    opens mm.utilities to com.google.gson;
+    opens mm.utilities.PhysicsObjects to com.google.gson;
+
 }

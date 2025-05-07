@@ -18,8 +18,12 @@ public class Ball extends RigidBody {
 
     private Circle circle;
 
+    private float radius;
+
     public Ball(float x, float y, float radius, float gradAngle, World world) {
 
+
+        this.radius = radius;
 
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(x, y);
@@ -42,6 +46,9 @@ public class Ball extends RigidBody {
     }
 
     public Ball(float x, float y, float radius, float gradAngle,float density, float friction, World world) {
+
+
+        this.radius = radius;
 
 
         BodyDef bodydef = new BodyDef();
@@ -74,4 +81,8 @@ public class Ball extends RigidBody {
         return this.circle;
     }
 
+
+    public float getRadius() {
+        return radius;
+    }
 }

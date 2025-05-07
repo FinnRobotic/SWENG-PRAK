@@ -13,6 +13,17 @@ public abstract class RigidBody {
         return this.body.getPosition();
     }
 
+    public float getX() {
+        return this.body.getPosition().x;
+    }
+
+    public float getY() {
+        return this.body.getPosition().y;
+    }
+
+
+
+
     public float getAngle(){
         return this.body.getAngle();
     }
