@@ -5,12 +5,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import mm.MVC.View;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 import javafx.scene.Scene;
 import mm.utilities.GameDef;
+import mm.utilities.Difficulty;
 
 import static mm.utilities.Makros.*;
 
@@ -21,7 +24,7 @@ public class StartView extends View {
     private Button settingsButton = new Button("Settings");
 
     private Button saveSettingsButton = new Button("Save & Close");
-    private ComboBox<GameDef.Difficulty> difficultyBox = new ComboBox<>();
+    private ComboBox<Difficulty> difficultyBox = new ComboBox<>();
     private Slider fpsSlider = new Slider(FPS_MIN, FPS_DEFAULT, FPS_MAX );
 
 
@@ -33,13 +36,19 @@ public class StartView extends View {
     private StartModel model;
 
     public StartView() {
-        VBox layout = new VBox(20);
-        layout.setAlignment(Pos.CENTER);
-
+        StackPane root = new StackPane();
+        VBox mainLayout = new VBox(20);
+        mainLayout.setAlignment(Pos.CENTER);
 
         Label startLabel = new Label("Crazy Machines");
-        layout.getChildren().addAll(startLabel, startButton, settingsButton);
-        setRoot(layout);
+        mainLayout.getChildren().addAll(startLabel, startButton, settingsButton);
+
+        // Overlay-Placeholder vorbereiten
+        VBox levelOverlay = createLevelOverlay();
+        levelOverlay.setVisible(false); // Nur anzeigen, wenn gebraucht
+
+        root.getChildren().addAll(mainLayout, levelOverlay);
+        setRoot(root);
 
         getRoot().getStylesheets().add(
                 getClass().getResource("/style/style.css").toExternalForm()
@@ -60,7 +69,7 @@ public class StartView extends View {
         fpsSlider.setMajorTickUnit(30);
         fpsSlider.setShowTickMarks(true);
 
-        difficultyBox.getItems().addAll(GameDef.Difficulty.values());
+        difficultyBox.getItems().addAll(Difficulty.values());
 
         popupLayout.setAlignment(Pos.CENTER);
         popupLayout.setStyle("-fx-padding: 20;");
@@ -91,7 +100,7 @@ public class StartView extends View {
         return saveSettingsButton;
     }
 
-    public ComboBox<GameDef.Difficulty> getDifficultyBox() {
+    public ComboBox<Difficulty> getDifficultyBox() {
         return difficultyBox;
     }
 
@@ -121,10 +130,33 @@ public class StartView extends View {
           }else  {
               popup.close();
           }
+    }
 
+    private VBox createLevelOverlay() {
+        VBox overlay = new VBox(10);
+        overlay.setAlignment(Pos.CENTER);
+        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); -fx-padding: 20;");
+        overlay.setMaxWidth(400);
+        overlay.setMaxHeight(300);
 
+        Label title = new Label("Level auswählen");
+        title.getStyleClass().add("label-title");
 
+        ComboBox<String> levelSelector = new ComboBox<>();
+        levelSelector.getItems().addAll("Leicht", "Mittel", "Schwer", "Benutzerdefiniert...");
+        levelSelector.getSelectionModel().selectFirst();
 
+        Button confirmButton = new Button("Level starten");
+        Button cancelButton = new Button("Zurück");
 
+        HBox buttonRow = new HBox(10, confirmButton, cancelButton);
+        buttonRow.setAlignment(Pos.CENTER);
+
+        overlay.getChildren().addAll(title, levelSelector, buttonRow);
+
+        // Verhalten hier optional (du kannst später auch Listener im Controller setzen)
+        cancelButton.setOnAction(e -> overlay.setVisible(false));
+
+        return overlay;
     }
 }

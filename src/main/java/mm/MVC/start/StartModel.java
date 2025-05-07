@@ -11,8 +11,15 @@ public class StartModel extends Observable {
 
     private boolean showSettings = false;
 
+    private boolean showLevelOverlay = false;
+
     public void toggleSettings() {
         showSettings = !showSettings;
+        notifyObservers();
+    }
+
+    public void toggleLevelOverlay() {
+        showLevelOverlay = !showLevelOverlay;
         notifyObservers();
     }
 

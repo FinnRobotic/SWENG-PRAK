@@ -16,7 +16,7 @@ public class StartController {
 
     public void setView(StartView view, ViewManager viewManager) {
 
-        view.getStartButton().setOnAction(actionEvent -> {viewManager.showGameView(view.getModel().getGameDef());});
+        view.getStartButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
 
         view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
 

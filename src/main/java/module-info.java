@@ -6,6 +6,7 @@ module mm {
     requires transitive javafx.graphics;
     requires jbox2d.library;
     requires java.desktop;
+    requires com.google.gson;
 
     exports mm.gui;
 }

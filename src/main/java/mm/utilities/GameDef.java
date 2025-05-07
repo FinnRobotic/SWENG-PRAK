@@ -59,21 +59,7 @@ public class GameDef {
         this.bodies.clear();
     }
 
-    public enum Difficulty {
-        EASY,
-        MEDIUM,
-        HARD;
 
-        @Override
-        public String toString() {
-            switch (this) {
-                case EASY: return "Easy";
-                case MEDIUM: return "Medium";
-                case HARD: return "Hard";
-                default: return super.toString();
-            }
-        }
-    }
 
 
 

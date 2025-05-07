@@ -29,6 +29,7 @@ public class ViewManager {
         controller.setView(view, this);
         scene = new Scene(view.getRoot(),500,500);
         stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
     }
 
