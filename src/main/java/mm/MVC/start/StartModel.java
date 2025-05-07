@@ -9,6 +9,17 @@ public class StartModel extends Observable {
 
     private GameDef gameDef;
 
+    private boolean showSettings = false;
+
+    public void toggleSettings() {
+        showSettings = !showSettings;
+        notifyObservers();
+    }
+
+    public boolean getShowSettings() {
+        return showSettings;
+    }
+
     public StartModel() {
         this.gameDef = new GameDef();
     }
