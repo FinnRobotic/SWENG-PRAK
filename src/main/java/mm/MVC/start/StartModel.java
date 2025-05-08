@@ -13,6 +13,8 @@ public class StartModel extends Observable {
 
     private boolean showLevelOverlay = false;
 
+    private boolean showBuilder = false;
+
     public void toggleSettings() {
         showSettings = !showSettings;
         notifyObservers();
@@ -23,6 +25,11 @@ public class StartModel extends Observable {
         notifyObservers();
     }
 
+    public void toggleBuilder() {
+        showBuilder = !showBuilder;
+        notifyObservers();
+    }
+
     public boolean getShowSettings() {
         return showSettings;
     }
@@ -30,6 +37,12 @@ public class StartModel extends Observable {
     public Boolean getShowLevelOverlay() {
         return showLevelOverlay;
     }
+
+    public Boolean getShowBuilder() {
+        return showBuilder;
+
+    }
+
 
     public StartModel() {
         this.gameDef = new GameDef();

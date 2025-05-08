@@ -30,6 +30,8 @@ public class GameDef {
         this.worldSizeY = 10;
 
     }
+
+    public Level currentLevel;
     
     public int FPS;
 
@@ -93,11 +95,19 @@ public class GameDef {
 
     public void integrateLevel(Level level, World world) {
 
+        this.currentLevel = level;
+
         createBodies(level.getObjects(), world);
 
         difficulty = level.getDifficulty();
 
         gravity = level.getGravity();
+
+    }
+
+    public void resetLevel(World world) {
+        clearBodies();
+        createBodies(this.currentLevel.getObjects(), world);
 
     }
 

@@ -10,9 +10,6 @@ public class Makros {
 
     public static final float px_to_m_scale = 1.0f / m_to_px_scale;
 
-    public static final float BorderMargin = 2;
-
-
 
     public static final float SIDEBAR_LEFT_WIDTH = 200;
 

@@ -1,13 +1,9 @@
 package mm.MVC.start;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import mm.MVC.View;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
@@ -16,10 +12,17 @@ import mm.utilities.Difficulty;
 
 import static mm.utilities.Makros.*;
 
-// To be implemented
+
 public class StartView extends View {
 
+    private StackPane root = new StackPane();
+
+
+
+    private VBox mainLayout = new VBox(20);
+    private Label startLabel = new Label("Crazy Machines");
     private Button startButton = new Button("Start");
+    private Button levelBuilderBTN = new Button("Level Builder");
     private Button settingsButton = new Button("Settings");
 
     private Button saveSettingsButton = new Button("Save & Close");
@@ -33,35 +36,40 @@ public class StartView extends View {
     private Scene popupScene = new Scene(popupLayout, SETTINGS_WIDTH, SETTINGS_HEIGHT);
 
 
-    VBox levelOverlay;
-    Button confirmButton = new Button("Level starten");
-    Button cancelButton = new Button("Zurück");
-    Button selectEasyLevelButton = new Button("Easy");
-    Button selectMediumLevelButton = new Button("Medium");
-    Button selectHardLevelButton = new Button("Hard");
-    Button selectCustomLevelButton = new Button("Custom Level");
+    private VBox levelOverlay;
+    private Button confirmButton = new Button("Level starten");
+    private Button cancelButton = new Button("Zurück");
+    private Button selectEasyLevelButton = new Button("Easy");
+    private Button selectMediumLevelButton = new Button("Medium");
+    private Button selectHardLevelButton = new Button("Hard");
+    private Button selectCustomLevelButton = new Button("Custom Level");
 
-
-
-
-
+    private BorderPane builderOverlay;
+    private Pane builderPane;
+    private Button placeBox = new Button("Box");
+    private Button placeBall = new Button("Ball");
+    private Button placeStart = new Button("StartPoint");
+    private Button exitButton = new Button("Exit");
 
 
     private StartModel model;
 
     public StartView() {
-        StackPane root = new StackPane();
-        VBox mainLayout = new VBox(20);
-        mainLayout.setAlignment(Pos.CENTER);
 
-        Label startLabel = new Label("Crazy Machines");
-        mainLayout.getChildren().addAll(startLabel, startButton, settingsButton);
+        mainLayout.setAlignment(Pos.CENTER);
+        mainLayout.getChildren().addAll(startLabel,
+                                        startButton,
+                                        levelBuilderBTN,
+                                        settingsButton);
 
         // Overlay-Placeholder vorbereiten
         levelOverlay = createLevelOverlay();
         levelOverlay.setVisible(false); // Nur anzeigen, wenn gebraucht
 
-        root.getChildren().addAll(mainLayout, levelOverlay);
+        builderOverlay = createLevelBuilder();
+        builderOverlay.setVisible(false);
+
+        root.getChildren().addAll(mainLayout, levelOverlay, builderOverlay);
         setRoot(root);
 
         getRoot().getStylesheets().add(
@@ -100,6 +108,10 @@ public class StartView extends View {
     }
     public Button getStartButton() {
         return startButton;
+    }
+
+    public Button getLevelBuilderBTN() {
+        return levelBuilderBTN;
     }
 
     public void setSettingsButton(Button settingsButton) {
@@ -167,6 +179,7 @@ public class StartView extends View {
           }
 
           levelOverlay.setVisible(model.getShowLevelOverlay());
+          builderOverlay.setVisible(model.getShowBuilder());
 
     }
 
@@ -188,5 +201,68 @@ public class StartView extends View {
         overlay.getChildren().addAll(title, selectLevel,selectCustomLevelButton, cancelButtonRow);
 
         return overlay;
+    }
+
+
+    private BorderPane createLevelBuilder() {
+        builderPane = new Pane();
+        builderPane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH);
+        builderPane.setStyle("-fx-background-color: lightgray;");
+
+        VBox sidebarLeft = new VBox();
+        sidebarLeft.setPrefWidth(SIDEBAR_LEFT_WIDTH);
+        sidebarLeft.setStyle("-fx-background-color: rgba(0,255,0);");
+        sidebarLeft.getChildren().addAll(placeStart);
+
+        VBox sidebarRight = new VBox();
+        sidebarRight.setPrefWidth(SIDEBAR_RIGHT_WIDTH);
+        sidebarRight.setStyle("-fx-background-color: rgba(255,0,0);");
+        sidebarRight.getChildren().addAll(placeBall, placeBox);
+
+        // Levelname-Eingabe
+        Label nameLabel = new Label("Levelname:");
+        TextField nameInput = new TextField();
+        nameInput.setPrefWidth(120);
+        VBox nameBox = new VBox(5, nameLabel, nameInput);
+        nameBox.setAlignment(Pos.CENTER_LEFT);
+
+// Gravitation-Eingabe
+        Label gravityTitleLabel = new Label("Gravitation:");
+        Label gravityXLabel = new Label("X:");
+        TextField gravityXInput = new TextField();
+        gravityXInput.setPrefWidth(60);
+
+        Label gravityYLabel = new Label("Y:");
+        TextField gravityYInput = new TextField();
+        gravityYInput.setPrefWidth(60);
+
+        HBox gravityXYBox = new HBox(10,
+                new VBox(5, gravityXLabel, gravityXInput),
+                new VBox(5, gravityYLabel, gravityYInput)
+        );
+        gravityXYBox.setAlignment(Pos.CENTER_LEFT);
+
+        VBox gravityBox = new VBox(5, gravityTitleLabel, gravityXYBox);
+        gravityBox.setAlignment(Pos.CENTER_LEFT);
+
+// BottomBar
+        HBox bottomBar = new HBox(20); // Mehr Abstand für bessere Lesbarkeit
+        bottomBar.setPrefHeight(BOTTOMBAR_HEIGHT);
+        bottomBar.setPadding(new Insets(5));
+        bottomBar.setStyle("-fx-background-color: rgba(0,0,0);");
+        bottomBar.setAlignment(Pos.CENTER_LEFT);
+        bottomBar.getChildren().addAll(
+                exitButton,
+                nameBox,
+                gravityBox
+        );
+
+        BorderPane layout = new BorderPane();
+        layout.setCenter(builderPane);
+        layout.setLeft(sidebarLeft);
+        layout.setRight(sidebarRight);
+        layout.setBottom(bottomBar);
+        return layout;
+
     }
 }

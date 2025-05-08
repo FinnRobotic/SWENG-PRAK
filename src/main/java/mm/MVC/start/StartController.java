@@ -27,6 +27,8 @@ public class StartController {
 
         view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
 
+        view.getLevelBuilderBTN().setOnAction(e -> view.getModel().toggleBuilder());
+
         view.getSaveSettingsButton().setOnAction(e -> {
             GameDef gameDef = view.getModel().getGameDef();
             gameDef.difficulty = view.getDifficultyBox().getValue();
