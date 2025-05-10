@@ -50,6 +50,9 @@ public class StartView extends View {
     private Button placeBall = new Button("Ball");
     private Button placeStart = new Button("StartPoint");
     private Button exitButton = new Button("Exit");
+    private TextField gravityXInput = new TextField();
+    private TextField gravityYInput = new TextField();
+    private TextField nameInput = new TextField();
 
 
     private StartModel model;
@@ -134,6 +137,9 @@ public class StartView extends View {
         return cancelButton;
     }
 
+    public Button getBuilderExitBTN(){
+        return exitButton;
+    }
 
     public Button getEasyLevelButton() {
         return selectEasyLevelButton;
@@ -153,6 +159,19 @@ public class StartView extends View {
 
     public Slider getFpsSlider() {
         return fpsSlider;
+    }
+
+
+    public TextField getNameInput() {
+        return nameInput;
+    }
+
+    public TextField getGravityXInput() {
+        return gravityXInput;
+    }
+
+    public TextField getGravityYInput() {
+        return gravityYInput;
     }
 
     public StartModel getModel() {
@@ -221,7 +240,6 @@ public class StartView extends View {
 
         // Levelname-Eingabe
         Label nameLabel = new Label("Levelname:");
-        TextField nameInput = new TextField();
         nameInput.setPrefWidth(120);
         VBox nameBox = new VBox(5, nameLabel, nameInput);
         nameBox.setAlignment(Pos.CENTER_LEFT);
@@ -229,11 +247,9 @@ public class StartView extends View {
 // Gravitation-Eingabe
         Label gravityTitleLabel = new Label("Gravitation:");
         Label gravityXLabel = new Label("X:");
-        TextField gravityXInput = new TextField();
         gravityXInput.setPrefWidth(60);
 
         Label gravityYLabel = new Label("Y:");
-        TextField gravityYInput = new TextField();
         gravityYInput.setPrefWidth(60);
 
         HBox gravityXYBox = new HBox(10,

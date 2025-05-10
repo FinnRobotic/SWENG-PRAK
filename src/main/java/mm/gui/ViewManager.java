@@ -27,11 +27,11 @@ public class ViewManager {
         StartView view = new StartView();
         view.setModel(model);
         StartController controller = new StartController();
-        controller.setView(view, this);
         scene = new Scene(view.getRoot(),500,500);
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
+        controller.setView(view, this);
     }
 
     public void showGameView(Level level, GameDef gamedef) {

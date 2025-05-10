@@ -3,8 +3,11 @@ package mm.MVC.start;
 
 import mm.MVC.util.Observable;
 import mm.utilities.GameDef;
+import mm.utilities.Level;
 
-// To be implemented
+import static mm.utilities.JSON.JSONLevelIO.saveToFileWithDirectoryChooser;
+
+
 public class StartModel extends Observable {
 
     private GameDef gameDef;
@@ -14,6 +17,8 @@ public class StartModel extends Observable {
     private boolean showLevelOverlay = false;
 
     private boolean showBuilder = false;
+
+    private Level builderLevel;
 
     public void toggleSettings() {
         showSettings = !showSettings;
@@ -43,6 +48,10 @@ public class StartModel extends Observable {
 
     }
 
+    public Level getBuilderLevel() {
+        return builderLevel;
+    }
+
 
     public StartModel() {
         this.gameDef = new GameDef();
@@ -52,5 +61,25 @@ public class StartModel extends Observable {
         return this.gameDef;
     }
 
+
+
+    public void startBuilder() {
+        this.builderLevel = new Level();
+        this.showBuilder = true;
+        notifyObservers();
+    }
+
+    public void saveAndCloseBuilder(StartView view) {
+        this.showBuilder = false;
+
+        try {
+            saveToFileWithDirectoryChooser(builderLevel, view.getRoot().getScene().getWindow());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        notifyObservers();
+    }
 
 }

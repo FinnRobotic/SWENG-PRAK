@@ -1,20 +1,16 @@
 package mm.MVC.start;
 
 
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.input.KeyCode;
 import mm.gui.ViewManager;
 import mm.utilities.GameDef;
-import mm.utilities.JSON.JSONLevelIO;
 import mm.utilities.Level;
 
-import java.io.File;
+
 import java.io.IOException;
+
+import static mm.utilities.JSON.JSONLevelIO.loadLevelFromDirectory;
+import static mm.utilities.JSON.JSONLevelIO.loadLevelFromFile;
 
 // To be implemented
 public class StartController {
@@ -27,7 +23,9 @@ public class StartController {
 
         view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
 
-        view.getLevelBuilderBTN().setOnAction(e -> view.getModel().toggleBuilder());
+        view.getLevelBuilderBTN().setOnAction(e -> view.getModel().startBuilder());
+        view.getBuilderExitBTN().setOnAction(e -> view.getModel().saveAndCloseBuilder(view));
+
 
         view.getSaveSettingsButton().setOnAction(e -> {
             GameDef gameDef = view.getModel().getGameDef();
@@ -43,38 +41,62 @@ public class StartController {
 
 
 
-        view.getMediumLevelButton().setOnAction(e -> loadEasyLevel(view, viewManager));
+        view.getMediumLevelButton().setOnAction(e -> loadMediumLevel(view, viewManager));
 
 
 
 
 
         view.getCustomLevelButton().setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Benutzerdefiniertes Level auswählen");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("JSON Dateien", "*.json")
-            );
-
-            // Starte im user-level Ordner, optional
-            File initialDir = new File("user-levels");
-            if (initialDir.exists()) {
-                fileChooser.setInitialDirectory(initialDir);
+            try {
+                Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
+            } catch(Exception ex) {
+                ex.printStackTrace();
             }
+        });
 
-            File selectedFile = fileChooser.showOpenDialog(view.getRoot().getScene().getWindow());
+        view.getRoot().getScene().setOnKeyPressed(e -> {
+            Boolean gravityXBoxSelected = view.getGravityXInput().isFocused();
+            Boolean gravityYBoxSelected = view.getGravityYInput().isFocused();
+            Boolean textFieldSelected = view.getNameInput().isFocused();
 
-            if (selectedFile != null) {
-                System.out.println("Ausgewähltes Level: " + selectedFile.getAbsolutePath());
-                // hier kannst du das File ans Model/Controller übergeben oder speichern
+            if (e.getCode() == KeyCode.ENTER) {
+                if (gravityXBoxSelected) {
+                    try {
+                        String inputText = view.getGravityXInput().getText().replace(",", ".");
+                        float gravityX = Float.parseFloat(inputText);
+                        view.getModel().getBuilderLevel().setGravityX(gravityX);
+                        System.out.println("GravityX selected: " + gravityX);
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Ungültige Eingabe: Keine gültige Kommazahl");
+                        System.out.println("GravityBox X");
+                    }
+                }
+
+                if (gravityYBoxSelected) {
+                    try {
+                        String inputText = view.getGravityYInput().getText().replace(",", ".");
+                        float gravityY = Float.parseFloat(inputText);
+                        view.getModel().getBuilderLevel().setGravityY(gravityY);
+                        System.out.println("GravityY selected: " + gravityY);
+                    } catch (NumberFormatException ex) {
+                        System.out.println("Ungültige Eingabe: Keine gültige Kommazahl");
+                        System.out.println("GravityBox Y");
+                    }
+                }
+                if (textFieldSelected) {
+
+                    view.getModel().getBuilderLevel().setName(view.getNameInput().getText());
+                    System.out.println("Name selected: " + view.getNameInput().getText());
+                }
             }
         });
     }
 
-    public void loadEasyLevel(StartView view,ViewManager viewManager) {
+    public void loadMediumLevel(StartView view,ViewManager viewManager) {
         String filePath = "src/main/resources/level/medium.json";
         try {
-            Level level = JSONLevelIO.loadLevelFromFile(filePath);
+            Level level = loadLevelFromFile(filePath);
 
             // Ausgabe der geladenen Level-Daten
             System.out.println("Level Name: " + level.getName());

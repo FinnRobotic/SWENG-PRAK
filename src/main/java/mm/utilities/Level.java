@@ -5,6 +5,7 @@ import mm.utilities.PhysicsObjects.RigidBody;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Level {
@@ -17,6 +18,14 @@ public class Level {
 
     private List<ObjectConf> objects;
 
+    public Level() {
+        name = "";
+        difficulty = Difficulty.EASY;
+        gravity = new Vec2(0, 0);
+        objects = new ArrayList<>();
+    }
+
+
 
     public String getName() {
         return name;
@@ -28,6 +37,18 @@ public class Level {
 
     public Vec2 getGravity() {
         return gravity;
+    }
+
+    public void setGravityX(float gravityX) {
+        this.gravity.x = gravityX;
+    }
+
+    public void setGravityY(float gravityY) {
+        this.gravity.y = gravityY;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     public List<ObjectConf> getObjects() {
         return objects;
