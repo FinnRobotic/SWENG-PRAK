@@ -4,6 +4,7 @@ package mm.MVC.start;
 import mm.MVC.util.Observable;
 import mm.utilities.GameDef;
 import mm.utilities.Level;
+import mm.utilities.ObjectsConf.ObjectConf;
 
 import static mm.utilities.JSON.JSONLevelIO.saveToFileWithDirectoryChooser;
 
@@ -73,6 +74,10 @@ public class StartModel extends Observable {
         this.showBuilder = false;
 
         try {
+            System.out.println("Objects im Level: " + builderLevel.getObjects().size());
+            for (ObjectConf obj : builderLevel.getObjects()) {
+                System.out.println(obj.getClass().getSimpleName());
+            }
             saveToFileWithDirectoryChooser(builderLevel, view.getRoot().getScene().getWindow());
         } catch(Exception e) {
             e.printStackTrace();

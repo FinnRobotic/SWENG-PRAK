@@ -2,13 +2,7 @@ package mm.utilities.ObjectsConf;
 
 public class BallConf extends ObjectConf{
 
-    public float x;
-
-    public float y;
-
     public float radius;
-
-    public float angle;
 
     public float density;
 

@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Shape;
 import mm.MVC.View;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
@@ -44,7 +45,10 @@ public class StartView extends View {
     private Button selectHardLevelButton = new Button("Hard");
     private Button selectCustomLevelButton = new Button("Custom Level");
 
-    private BorderPane builderOverlay;
+
+    private Stage builderStage = new Stage();
+    private BorderPane builderOverlay = new BorderPane();
+    private Scene builderScene = new Scene(builderOverlay);
     private Pane builderPane;
     private Button placeBox = new Button("Box");
     private Button placeBall = new Button("Ball");
@@ -70,9 +74,13 @@ public class StartView extends View {
         levelOverlay.setVisible(false); // Nur anzeigen, wenn gebraucht
 
         builderOverlay = createLevelBuilder();
-        builderOverlay.setVisible(false);
+        builderStage.setTitle("Level Builder");
+        builderStage.setFullScreen(true);
+        builderStage.initModality(Modality.APPLICATION_MODAL);
+        builderStage.setScene(builderScene);
 
-        root.getChildren().addAll(mainLayout, levelOverlay, builderOverlay);
+
+        root.getChildren().addAll(mainLayout, levelOverlay);
         setRoot(root);
 
         getRoot().getStylesheets().add(
@@ -149,6 +157,10 @@ public class StartView extends View {
         return selectMediumLevelButton;
     }
 
+    public Button getHardLevelButton() {
+        return selectHardLevelButton;
+    }
+
     public Button getCustomLevelButton() {
         return selectCustomLevelButton;
     }
@@ -174,6 +186,10 @@ public class StartView extends View {
         return gravityYInput;
     }
 
+    public Button getPlaceBox() {
+        return placeBox;
+    }
+
     public StartModel getModel() {
 
         return this.model;
@@ -184,6 +200,14 @@ public class StartView extends View {
         this.model = model ;
         model.addObserver(this);
         update();
+    }
+
+    public Pane getBuilder() {
+        return builderPane;
+    }
+
+    public Stage getBuilderStage() {
+        return builderStage;
     }
 
 
@@ -197,8 +221,17 @@ public class StartView extends View {
               popup.close();
           }
 
+          if(model.getShowBuilder()) {
+
+              builderStage.setScene(builderScene);
+              builderStage.showAndWait();
+          } else {
+              builderStage.close();
+          }
+
+
           levelOverlay.setVisible(model.getShowLevelOverlay());
-          builderOverlay.setVisible(model.getShowBuilder());
+
 
     }
 
@@ -278,7 +311,19 @@ public class StartView extends View {
         layout.setLeft(sidebarLeft);
         layout.setRight(sidebarRight);
         layout.setBottom(bottomBar);
+
+        builderScene = new Scene(layout);
+
         return layout;
 
+    }
+
+    public void resetBuilderUI() {
+
+        builderPane.getChildren().clear();
+
+        nameInput.clear();
+        gravityXInput.clear();
+        gravityYInput.clear();
     }
 }

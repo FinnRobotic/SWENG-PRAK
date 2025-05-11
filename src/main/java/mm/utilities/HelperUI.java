@@ -12,10 +12,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import mm.utilities.ObjectsConf.BoxConf;
+import mm.utilities.ObjectsConf.ObjectConf;
+
+import static mm.utilities.Makros.px_to_m_scale;
 
 public class HelperUI {
 
-    public static void addDraggableResizableRotatableBox(Pane targetPane) {
+    public static ObjectConf addDraggableResizableRotatableBox(Pane targetPane) {
         BoxConf conf = new BoxConf();
 
         Rectangle rect = new Rectangle(100, 50);
@@ -26,30 +29,36 @@ public class HelperUI {
         group.setLayoutX(200);
         group.setLayoutY(200);
 
-        conf.x = 200;
-        conf.y = 200;
-        conf.width = 100;
-        conf.height = 50;
+        conf.x = 200 * px_to_m_scale;
+        conf.y = 200* px_to_m_scale;
+        conf.width = 100* px_to_m_scale;
+        conf.height = 50* px_to_m_scale;
         conf.angle = 0;
 
         // Ursprung in der Mitte
         rect.setTranslateX(-rect.getWidth() / 2);
         rect.setTranslateY(-rect.getHeight() / 2);
 
-        // Drag
+        // Drag-Deltas kapseln
+        final class Delta {
+            double x, y;
+        }
+        Delta dragDelta = new Delta();
+
         group.setOnMousePressed(e -> {
-            group.requestFocus(); // Für Tastatur
-            dragDeltaX = e.getSceneX() - group.getLayoutX();
-            dragDeltaY = e.getSceneY() - group.getLayoutY();
+            group.requestFocus(); // Tastatur-Fokus setzen
+            dragDelta.x = e.getSceneX() - group.getLayoutX();
+            dragDelta.y = e.getSceneY() - group.getLayoutY();
         });
 
         group.setOnMouseDragged(e -> {
-            double newX = e.getSceneX() - dragDeltaX;
-            double newY = e.getSceneY() - dragDeltaY;
+            double newX = e.getSceneX() - dragDelta.x;
+            double newY = e.getSceneY() - dragDelta.y;
             group.setLayoutX(newX);
             group.setLayoutY(newY);
-            conf.x = (float) newX;
-            conf.y = (float) newY;
+            float paneHeight = (float)targetPane.getHeight();
+            conf.x = (float) newX* px_to_m_scale;;
+            conf.y = (paneHeight- (float)newY) * px_to_m_scale;;
         });
 
         // Tastatur: Rotation + Skalierung
@@ -77,16 +86,16 @@ public class HelperUI {
                     break;
             }
 
-            // Update Conf
-            conf.width = (float) rect.getWidth();
-            conf.height = (float) rect.getHeight();
+            conf.width = (float) rect.getWidth()* px_to_m_scale*2;;
+            conf.height = (float) rect.getHeight()* px_to_m_scale*2;;
             conf.angle = (float) group.getRotate();
         });
 
         targetPane.getChildren().add(group);
 
-        // Optional: gleich Einstellungsfenster zeigen
+        // Konfigurationspanel anzeigen
         showBoxConfigPanel(conf);
+        return conf;
     }
 
     private static void showBoxConfigPanel(BoxConf conf) {
@@ -117,10 +126,8 @@ public class HelperUI {
         configStage.setScene(new Scene(layout));
         configStage.setTitle("Box-Konfiguration");
         configStage.show();
+
     }
 
-    private static class Delta {
-        double x, y;
-    }
 
 }

@@ -25,7 +25,9 @@ public class Level {
         objects = new ArrayList<>();
     }
 
-
+    public void addObject(ObjectConf object) {
+        objects.add(object);
+    }
 
     public String getName() {
         return name;

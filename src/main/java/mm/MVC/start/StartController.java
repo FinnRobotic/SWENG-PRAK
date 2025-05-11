@@ -1,7 +1,9 @@
 package mm.MVC.start;
 
 
+import javafx.event.Event;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import mm.gui.ViewManager;
 import mm.utilities.GameDef;
 import mm.utilities.Level;
@@ -9,6 +11,7 @@ import mm.utilities.Level;
 
 import java.io.IOException;
 
+import static mm.utilities.HelperUI.addDraggableResizableRotatableBox;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromDirectory;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromFile;
 
@@ -24,7 +27,10 @@ public class StartController {
         view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
 
         view.getLevelBuilderBTN().setOnAction(e -> view.getModel().startBuilder());
-        view.getBuilderExitBTN().setOnAction(e -> view.getModel().saveAndCloseBuilder(view));
+        view.getBuilderExitBTN().setOnAction(e -> {
+            view.getModel().saveAndCloseBuilder(view);
+            view.resetBuilderUI();
+        });
 
 
         view.getSaveSettingsButton().setOnAction(e -> {
@@ -50,46 +56,19 @@ public class StartController {
         view.getCustomLevelButton().setOnAction(e -> {
             try {
                 Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
+                System.out.println("Level Name: " + level.getName());
+                System.out.println("Difficulty: " + level.getDifficulty());
+                viewManager.showGameView(level,view.getModel().getGameDef());
+
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
         });
 
-        view.getRoot().getScene().setOnKeyPressed(e -> {
-            Boolean gravityXBoxSelected = view.getGravityXInput().isFocused();
-            Boolean gravityYBoxSelected = view.getGravityYInput().isFocused();
-            Boolean textFieldSelected = view.getNameInput().isFocused();
+        view.getBuilderStage().getScene().setOnKeyPressed(e -> {checkBoxInputs(view, e);});
 
-            if (e.getCode() == KeyCode.ENTER) {
-                if (gravityXBoxSelected) {
-                    try {
-                        String inputText = view.getGravityXInput().getText().replace(",", ".");
-                        float gravityX = Float.parseFloat(inputText);
-                        view.getModel().getBuilderLevel().setGravityX(gravityX);
-                        System.out.println("GravityX selected: " + gravityX);
-                    } catch (NumberFormatException ex) {
-                        System.out.println("Ungültige Eingabe: Keine gültige Kommazahl");
-                        System.out.println("GravityBox X");
-                    }
-                }
-
-                if (gravityYBoxSelected) {
-                    try {
-                        String inputText = view.getGravityYInput().getText().replace(",", ".");
-                        float gravityY = Float.parseFloat(inputText);
-                        view.getModel().getBuilderLevel().setGravityY(gravityY);
-                        System.out.println("GravityY selected: " + gravityY);
-                    } catch (NumberFormatException ex) {
-                        System.out.println("Ungültige Eingabe: Keine gültige Kommazahl");
-                        System.out.println("GravityBox Y");
-                    }
-                }
-                if (textFieldSelected) {
-
-                    view.getModel().getBuilderLevel().setName(view.getNameInput().getText());
-                    System.out.println("Name selected: " + view.getNameInput().getText());
-                }
-            }
+        view.getPlaceBox().setOnAction(e -> {
+            view.getModel().getBuilderLevel().addObject(addDraggableResizableRotatableBox(view.getBuilder()));
         });
     }
 
@@ -109,6 +88,44 @@ public class StartController {
         }
     }
 
+    public void checkBoxInputs(StartView view, KeyEvent e) {
+
+        Boolean gravityXBoxSelected = view.getGravityXInput().isFocused();
+        Boolean gravityYBoxSelected = view.getGravityYInput().isFocused();
+        Boolean textFieldSelected = view.getNameInput().isFocused();
+
+        if (e.getCode() == KeyCode.ENTER) {
+            if (gravityXBoxSelected) {
+                try {
+                    String inputText = view.getGravityXInput().getText().replace(",", ".");
+                    float gravityX = Float.parseFloat(inputText);
+                    view.getModel().getBuilderLevel().setGravityX(gravityX);
+                    System.out.println("GravityX selected: " + gravityX);
+                } catch (NumberFormatException ex) {
+                    System.out.println("Ungültige Eingabe: Keine gültige Kommazahl");
+                    System.out.println("GravityBox X");
+                }
+            }
+
+            if (gravityYBoxSelected) {
+                try {
+                    String inputText = view.getGravityYInput().getText().replace(",", ".");
+                    float gravityY = Float.parseFloat(inputText);
+                    view.getModel().getBuilderLevel().setGravityY(gravityY);
+                    System.out.println("GravityY selected: " + gravityY);
+                } catch (NumberFormatException ex) {
+                    System.out.println("Ungültige Eingabe: Keine gültige Kommazahl");
+                    System.out.println("GravityBox Y");
+                }
+            }
+            if (textFieldSelected) {
+
+                view.getModel().getBuilderLevel().setName(view.getNameInput().getText());
+                System.out.println("Name selected: " + view.getNameInput().getText());
+            }
+        }
+
+    }
 
 }
 

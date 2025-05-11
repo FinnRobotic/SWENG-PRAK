@@ -2,15 +2,10 @@ package mm.utilities.ObjectsConf;
 
 public class BoxConf extends ObjectConf{
 
-    public float x;
-
-    public float y;
 
     public float width;
 
     public float height;
-
-    public float angle;
 
     public float density;
 
@@ -43,5 +38,16 @@ public class BoxConf extends ObjectConf{
         this.angle = 0;
         this.density = -1;
         this.friction = -1;
+    }
+
+    public BoxConf(){
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+        this.angle = 0;
+        this.density = -1;
+        this.friction = -1;
+
     }
 }

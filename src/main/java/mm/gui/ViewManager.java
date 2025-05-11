@@ -27,7 +27,7 @@ public class ViewManager {
         StartView view = new StartView();
         view.setModel(model);
         StartController controller = new StartController();
-        scene = new Scene(view.getRoot(),500,500);
+        scene = new Scene(view.getRoot(),1280,720);
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
@@ -45,7 +45,7 @@ public class ViewManager {
         GameController controller = new GameController();
 
         controller.setView(view, this);
-        Scene scene = new Scene(view.getRoot(), 1280, 720);
+        scene = new Scene(view.getRoot(), 1280, 720);
         stage.setScene(scene);
         stage.setFullScreen(true);
 
