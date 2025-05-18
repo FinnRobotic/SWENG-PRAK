@@ -12,10 +12,17 @@ import org.jbox2d.dynamics.World;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Defines the core game configuration including physics simulation parameters,
+ * current level details, and management of physical bodies in the simulation.
+ */
 public class GameDef {
 
 
-
+    /**
+     * Constructs a default GameDef instance with default FPS, physics iterations,
+     * and world size.
+     */
     public GameDef() {
         this.FPS = 120;
 
@@ -51,19 +58,38 @@ public class GameDef {
 
     public int worldSizeY;
 
+    /**
+     * Adds a rigid body to the simulation.
+     *
+     * @param body the RigidBody to add
+     */
     public void addBody(RigidBody body) {
         this.bodies.add(body);
     }
 
+    /**
+     * Returns the list of all rigid bodies in the simulation.
+     *
+     * @return list of rigid bodies
+     */
     public List<RigidBody> getBodies() {
         return this.bodies;
     }
 
+    /**
+     * Clears all rigid bodies from the simulation.
+     */
     public void clearBodies() {
         this.bodies.clear();
     }
 
-
+    /**
+     * Creates physical bodies in the Box2D world based on the provided object configurations.
+     * Currently supports BallConf and BoxConf types.
+     *
+     * @param objects list of object configurations to create bodies from
+     * @param world the physics World where bodies will be created
+     */
     private void createBodies(List<ObjectConf> objects, World world) {
         for (ObjectConf object : objects) {
             switch (object.getClass().getSimpleName()) {
@@ -93,6 +119,13 @@ public class GameDef {
         }
     }
 
+    /**
+     * Integrates a new level into the game definition, creating bodies
+     * in the specified physics world and updating gravity and difficulty.
+     *
+     * @param level the Level to integrate
+     * @param world the physics World where bodies should be created
+     */
     public void integrateLevel(Level level, World world) {
 
         this.currentLevel = level;
@@ -105,6 +138,12 @@ public class GameDef {
 
     }
 
+    /**
+     * Resets the current level by clearing all bodies and recreating them
+     * in the given physics world.
+     *
+     * @param world the physics World where bodies should be recreated
+     */
     public void resetLevel(World world) {
         clearBodies();
         createBodies(this.currentLevel.getObjects(), world);

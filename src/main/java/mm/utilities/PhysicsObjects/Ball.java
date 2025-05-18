@@ -13,6 +13,11 @@ import org.jbox2d.dynamics.World;
 
 import static mm.utilities.Makros.*;
 
+
+/**
+ * Represents a circular rigid body in the physics simulation.
+ * Wraps a JBox2D body and provides a corresponding JavaFX circle shape for rendering.
+ */
 public class Ball extends RigidBody {
 
 
@@ -21,6 +26,15 @@ public class Ball extends RigidBody {
 
     private float radius;
 
+    /**
+     * Creates a static Ball with specified position, radius, and rotation.
+     *
+     * @param x         x-position in physics world units (meters)
+     * @param y         y-position in physics world units (meters)
+     * @param radius    radius of the ball in meters
+     * @param gradAngle rotation angle in degrees
+     * @param world     the physics world where the body is created
+     */
     public Ball(float x, float y, float radius, float gradAngle, World world) {
 
 
@@ -46,6 +60,17 @@ public class Ball extends RigidBody {
         circle.setRotate(-gradAngle);
     }
 
+    /**
+     * Creates a dynamic Ball with specified position, radius, rotation, density, and friction.
+     *
+     * @param x         x-position in meters
+     * @param y         y-position in meters
+     * @param radius    radius in meters
+     * @param gradAngle rotation angle in degrees
+     * @param density   density of the material
+     * @param friction  friction coefficient
+     * @param world     the physics world where the body is created
+     */
     public Ball(float x, float y, float radius, float gradAngle,float density, float friction, World world) {
 
 
@@ -77,7 +102,14 @@ public class Ball extends RigidBody {
         circle.setRotate(-gradAngle);
     }
 
-
+    /**
+     * Creates a Ball from a BallConf configuration object.
+     * If density or friction is -1, the Ball is created as static.
+     * Otherwise, it is created as dynamic with specified physical properties.
+     *
+     * @param conf  configuration object containing position, radius, angle, density, and friction
+     * @param world the physics world where the body is created
+     */
     public Ball(BallConf conf, World world) {
 
         this.radius = conf.radius;
@@ -130,12 +162,21 @@ public class Ball extends RigidBody {
         }
     }
 
+    /**
+     * Returns the JavaFX Circle shape representing this Ball.
+     *
+     * @return the Circle shape for rendering
+     */
     @Override
     public Shape getShape() {
         return this.circle;
     }
 
-
+    /**
+     * Returns the radius of the Ball in meters.
+     *
+     * @return the radius in meters
+     */
     public float getRadius() {
         return radius;
     }
