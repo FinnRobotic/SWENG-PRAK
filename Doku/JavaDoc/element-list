@@ -1,0 +1,12 @@
+module:mm
+mm
+mm.gui
+mm.MVC
+mm.MVC.editor
+mm.MVC.game
+mm.MVC.start
+mm.MVC.util
+mm.utilities
+mm.utilities.JSON
+mm.utilities.ObjectsConf
+mm.utilities.PhysicsObjects

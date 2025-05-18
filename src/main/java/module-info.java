@@ -6,6 +6,13 @@ module mm {
     requires transitive javafx.graphics;
     requires jbox2d.library;
     requires java.desktop;
+    requires com.google.gson;
 
     exports mm.gui;
+
+
+    opens mm.utilities to com.google.gson;
+    opens mm.utilities.PhysicsObjects to com.google.gson;
+    exports mm.utilities.ObjectsConf;
+
 }
