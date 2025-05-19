@@ -96,7 +96,7 @@ public class StartController {
      * @param view the StartView instance for UI context
      * @param viewManager the ViewManager to switch to the game view
      */
-    public void loadMediumLevel(StartView view,ViewManager viewManager) {
+    private void loadMediumLevel(StartView view,ViewManager viewManager) {
         String filePath = "src/main/resources/level/medium.json";
         try {
             Level level = loadLevelFromFile(filePath);
@@ -121,7 +121,7 @@ public class StartController {
      * @param view the StartView instance containing the input fields
      * @param e the KeyEvent triggered by user input
      */
-    public void checkBoxInputs(StartView view, KeyEvent e) {
+    private void checkBoxInputs(StartView view, KeyEvent e) {
 
         Boolean gravityXBoxSelected = view.getGravityXInput().isFocused();
         Boolean gravityYBoxSelected = view.getGravityYInput().isFocused();

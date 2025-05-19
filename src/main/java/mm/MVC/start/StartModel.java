@@ -30,6 +30,14 @@ public class StartModel extends Observable {
     private Level builderLevel;
 
     /**
+     * Constructs a new StartModel with a fresh GameDef.
+     */
+    public StartModel() {
+        this.gameDef = new GameDef();
+    }
+
+
+    /**
      * Toggles the visibility state of the settings popup.
      * Notifies observers after changing the state.
      */
@@ -47,14 +55,6 @@ public class StartModel extends Observable {
         notifyObservers();
     }
 
-    /**
-     * Toggles the visibility state of the level builder window.
-     * Notifies observers after changing the state.
-     */
-    public void toggleBuilder() {
-        showBuilder = !showBuilder;
-        notifyObservers();
-    }
 
     /**
      * Returns whether the settings popup should be shown.
@@ -93,12 +93,6 @@ public class StartModel extends Observable {
         return builderLevel;
     }
 
-    /**
-     * Constructs a new StartModel with a fresh GameDef.
-     */
-    public StartModel() {
-        this.gameDef = new GameDef();
-    }
 
     /**
      * Returns the GameDef instance associated with this model.

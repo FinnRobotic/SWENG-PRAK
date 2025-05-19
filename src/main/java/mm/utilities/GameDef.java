@@ -26,8 +26,6 @@ public class GameDef {
     public GameDef() {
         this.FPS = 120;
 
-        this.optimizeSimulation = false;
-
         this.velocityIterations = 8;
 
         this.positionIterations = 4;
@@ -47,8 +45,6 @@ public class GameDef {
     public Vec2 gravity;
 
     public Difficulty difficulty;
-
-    public boolean optimizeSimulation;
 
     public int velocityIterations;
 

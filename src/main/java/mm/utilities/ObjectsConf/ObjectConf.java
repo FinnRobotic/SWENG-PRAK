@@ -4,7 +4,7 @@ package mm.utilities.ObjectsConf;
  * Configuration class representing a generic physics object.
  * Contains the position (x, y), rotation angle, and static state.
  */
-public class ObjectConf {
+public abstract class ObjectConf {
 
     /**
      * The x-coordinate position of the object (in meters).
