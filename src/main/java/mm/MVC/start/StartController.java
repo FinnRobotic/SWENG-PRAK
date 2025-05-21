@@ -9,6 +9,7 @@ import mm.utilities.GameDef;
 import mm.utilities.Level;
 
 
+import javax.swing.text.View;
 import java.io.IOException;
 
 import static mm.utilities.HelperUI.addDraggableResizableRotatableBox;
@@ -40,15 +41,10 @@ public class StartController {
 
        setLevelBuilder(view, viewManager);
 
-        // Save settings from UI controls and toggle settings popup off
-        view.getSaveSettingsButton().setOnAction(e -> {
-            GameDef gameDef = view.getModel().getGameDef();
-            gameDef.difficulty = view.getDifficultyBox().getValue();
-            gameDef.FPS = (int) view.getFpsSlider().getValue();
+       setLevelOverlay(view, viewManager);
 
-            System.out.println("Settings saved: Difficulty = " + gameDef.difficulty + ", FPS = " + gameDef.FPS);
-            view.getModel().toggleSettings();
-        });
+
+       setSettings(view, viewManager);
 
 
 
@@ -61,15 +57,39 @@ public class StartController {
      * @param viewManager The ViewManager.
      */
     private void setStart(StartView view, ViewManager viewManager) {
-        view.getStartButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
-        view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
-        view.getCancelButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
-        view.getLevelBuilderBTN().setOnAction(e -> view.getModel().startBuilder());
-        view.getMediumLevelButton().setOnAction(e -> loadMediumLevel(view, viewManager));
+        view.getStartButton().setOnAction(e -> {
+            view.getModel().toggleLevelOverlay();
+        });
+
+        view.getSettingsButton().setOnAction(e -> {
+            view.getModel().toggleSettings();
+        });
+
+        view.getLevelBuilderBTN().setOnAction(e -> {
+            view.getModel().startBuilder();
+        });
+
+    }
+
+
+    private void setLevelOverlay(StartView view, ViewManager viewManager) {
+
+
+        view.getMediumLevelButton().setOnAction(e -> {
+            loadMediumLevel(view, viewManager);
+        });
+
         view.getCustomLevelButton().setOnAction(e -> {
             loadCustomLevel(view, viewManager);
         });
+
+        view.getCancelButton().setOnAction(e -> {
+            view.getModel().toggleLevelOverlay();
+        });
     }
+
+
+
     /**
      * Loads a predefined medium difficulty level from file and opens the game view.
      *
@@ -108,6 +128,23 @@ public class StartController {
             ex.printStackTrace();
         }
     }
+
+
+    private void setSettings(StartView view, ViewManager viewManager) {
+        // Save settings from UI controls and toggle settings popup off
+        view.getSaveSettingsButton().setOnAction(e -> {
+            GameDef gameDef = view.getModel().getGameDef();
+            gameDef.difficulty = view.getDifficultyBox().getValue();
+            gameDef.FPS = (int) view.getFpsSlider().getValue();
+
+            System.out.println("Settings saved: Difficulty = " + gameDef.difficulty + ", FPS = " + gameDef.FPS);
+            view.getModel().toggleSettings();
+        });
+
+    }
+
+
+
     /**
      * Sets up controls for the level builder UI (placing objects, exiting builder mode, etc.).
      *
