@@ -9,11 +9,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import mm.utilities.ObjectsConf.BallConf;
 import mm.utilities.ObjectsConf.BoxConf;
 import mm.utilities.ObjectsConf.ObjectConf;
 
+import static mm.utilities.Makros.GAMEPANE_HEIGHT;
 import static mm.utilities.Makros.px_to_m_scale;
 
 
@@ -39,50 +42,57 @@ public class HelperUI {
         rect.setFill(Color.DODGERBLUE);
         rect.setStroke(Color.BLACK);
 
-        Group group = new Group(rect);
-        group.setLayoutX(200);
-        group.setLayoutY(200);
+        // Ursprung in der Mitte des Rechtecks
+        rect.setX(-rect.getWidth() / 2);
+        rect.setY(-rect.getHeight() / 2);
 
-        conf.x = 200 * px_to_m_scale;
-        conf.y = 200* px_to_m_scale;
-        conf.width = 100* px_to_m_scale;
-        conf.height = 50* px_to_m_scale;
+        // Anfangsposition im Pane
+        rect.setLayoutX(200);
+        rect.setLayoutY(200);
+
+        // Initialwerte im Conf-Objekt
+        conf.x = (GAMEPANE_HEIGHT - 200) * px_to_m_scale;
+        conf.y = 200 * px_to_m_scale;
+        conf.width = 100 * px_to_m_scale;
+        conf.height = 50 * px_to_m_scale;
         conf.angle = 0;
 
-        // Ursprung in der Mitte
-        rect.setTranslateX(-rect.getWidth() / 2);
-        rect.setTranslateY(-rect.getHeight() / 2);
-
-        // Drag-Deltas kapseln
+        // Drag-Deltas
         final class Delta {
             double x, y;
         }
         Delta dragDelta = new Delta();
 
-        group.setOnMousePressed(e -> {
-            group.requestFocus(); // Tastatur-Fokus setzen
-            dragDelta.x = e.getSceneX() - group.getLayoutX();
-            dragDelta.y = e.getSceneY() - group.getLayoutY();
+        rect.setOnMousePressed(e -> {
+            rect.requestFocus();
+            dragDelta.x = e.getSceneX() - rect.getLayoutX();
+            dragDelta.y = e.getSceneY() - rect.getLayoutY();
         });
 
-        group.setOnMouseDragged(e -> {
+
+
+        rect.setOnMouseDragged(e -> {
             double newX = e.getSceneX() - dragDelta.x;
             double newY = e.getSceneY() - dragDelta.y;
-            group.setLayoutX(newX);
-            group.setLayoutY(newY);
-            float paneHeight = (float)targetPane.getHeight();
-            conf.x = (float) newX* px_to_m_scale;;
-            conf.y = (paneHeight- (float)newY) * px_to_m_scale;;
+            rect.setLayoutX(newX);
+            rect.setLayoutY(newY);
+
+            conf.x = (float) newX * px_to_m_scale;
+            conf.y = (float)(GAMEPANE_HEIGHT - newY) * px_to_m_scale;
+
+            System.out.printf("layoutX: %.2f, layoutY: %.2f%n", rect.getLayoutX(), rect.getLayoutY());
+            System.out.printf("conf.x: %.2f, conf.y: %.2f%n", conf.x, conf.y);
+            System.out.printf("Real X: %f Real Y: %f\n", rect.getTranslateX(), rect.getTranslateY());
+            System.out.println(GAMEPANE_HEIGHT - newY);
         });
 
-        // Tastatur: Rotation + Skalierung
-        group.setOnKeyPressed(e -> {
+        rect.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case LEFT:
-                    group.setRotate(group.getRotate() - 5);
+                    rect.setRotate(rect.getRotate() - 5);
                     break;
                 case RIGHT:
-                    group.setRotate(group.getRotate() + 5);
+                    rect.setRotate(rect.getRotate() + 5);
                     break;
                 case W:
                     rect.setHeight(rect.getHeight() - 5);
@@ -99,15 +109,15 @@ public class HelperUI {
                 default:
                     break;
             }
+            rect.setX(-rect.getWidth() / 2);
+            rect.setY(-rect.getHeight() / 2);
 
-            conf.width = (float) rect.getWidth()* px_to_m_scale*2;;
-            conf.height = (float) rect.getHeight()* px_to_m_scale*2;;
-            conf.angle = (float) group.getRotate();
+            conf.width = (float) rect.getWidth() * px_to_m_scale;
+            conf.height = (float) rect.getHeight() * px_to_m_scale;
+            conf.angle = (float) -rect.getRotate();
         });
 
-        targetPane.getChildren().add(group);
-
-        // Konfigurationspanel anzeigen
+        targetPane.getChildren().add(rect);
         showBoxConfigPanel(conf);
         return conf;
     }
@@ -147,6 +157,70 @@ public class HelperUI {
         configStage.setTitle("Box-Konfiguration");
         configStage.show();
 
+    }
+
+    public static BallConf addDraggableBall(Pane targetPane) {
+        float initialRadius = 25; // px
+
+        Circle circle = new Circle(initialRadius, Color.ORANGE);
+        circle.setStroke(Color.BLACK);
+
+        // Anfangsposition
+        double initialX = 200;
+        double initialY = 200;
+        circle.setLayoutX(initialX);
+        circle.setLayoutY(initialY);
+
+        BallConf conf = new BallConf(
+                (float) initialX * px_to_m_scale,
+                (float) (GAMEPANE_HEIGHT - initialY) * px_to_m_scale,
+                initialRadius * px_to_m_scale
+        );
+
+        // Drag helper
+        final class Delta {
+            double x, y;
+        }
+        Delta dragDelta = new Delta();
+
+        circle.setOnMousePressed(e -> {
+            circle.requestFocus();
+            dragDelta.x = e.getSceneX() - circle.getLayoutX();
+            dragDelta.y = e.getSceneY() - circle.getLayoutY();
+        });
+
+        circle.setOnMouseDragged(e -> {
+            double newX = e.getSceneX() - dragDelta.x;
+            double newY = e.getSceneY() - dragDelta.y;
+            circle.setLayoutX(newX);
+            circle.setLayoutY(newY);
+
+            conf.x = (float) newX * px_to_m_scale;
+            conf.y = (float) (GAMEPANE_HEIGHT - newY) * px_to_m_scale;
+
+            System.out.printf("Ball pos: layoutX=%.2f layoutY=%.2f -> conf.x=%.3f conf.y=%.3f%n",
+                    newX, newY, conf.x, conf.y);
+        });
+
+        // Radius ändern über Tastatur (z. B. W/S)
+        circle.setOnKeyPressed(e -> {
+            double newRadius = circle.getRadius();
+            switch (e.getCode()) {
+                case W:
+                    newRadius += 2;
+                    break;
+                case S:
+                    newRadius -= 2;
+                    break;
+                default:
+                    return;
+            }
+            circle.setRadius(newRadius);
+            conf.radius = (float) (newRadius * px_to_m_scale);
+        });
+
+        targetPane.getChildren().add(circle);
+        return conf;
     }
 
 

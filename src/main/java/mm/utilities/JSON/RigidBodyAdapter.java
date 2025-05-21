@@ -79,6 +79,12 @@ public class RigidBodyAdapter implements JsonDeserializer<ObjectConf>, JsonSeria
             jsonObject.add("x", new JsonPrimitive(((BallConf) src).x));
             jsonObject.add("y", new JsonPrimitive(((BallConf) src).y));
             jsonObject.add("radius", new JsonPrimitive(((BallConf) src).radius));
+            if (((BallConf) src).density != -1) {
+                jsonObject.add("density", new JsonPrimitive(((BallConf) src).density));
+            }
+            if (((BallConf) src).friction != -1) {
+                jsonObject.add("friction", new JsonPrimitive(((BallConf) src).friction));
+            }
         }
         // Wenn es eine Box ist, serialisiere sie entsprechend
         else if (src instanceof BoxConf) {

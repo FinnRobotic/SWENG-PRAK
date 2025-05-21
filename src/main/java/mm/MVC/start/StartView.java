@@ -1,16 +1,15 @@
 package mm.MVC.start;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import mm.MVC.View;
 import javafx.stage.Stage;
-import javafx.stage.Modality;
-import javafx.scene.Scene;
+import mm.MVC.start.elementsUI.LevelBuilder;
+import mm.MVC.start.elementsUI.LevelOverlay;
+import mm.MVC.start.elementsUI.Settings;
+import mm.MVC.start.elementsUI.StartScreen;
 import mm.utilities.Difficulty;
-
-import static mm.utilities.Makros.*;
 
 /**
  * The StartView class represents the start screen of the application.
@@ -27,45 +26,13 @@ public class StartView extends View {
     private StackPane root = new StackPane();
 
 
+    private StartScreen startScreen;
 
-    private VBox mainLayout = new VBox(20);
-    private Label startLabel = new Label("Crazy Machines");
-    private Button startButton = new Button("Start");
-    private Button levelBuilderBTN = new Button("Level Builder");
-    private Button settingsButton = new Button("Settings");
+    private LevelOverlay levelOverlay;
 
-    private Button saveSettingsButton = new Button("Save & Close");
-    private ComboBox<Difficulty> difficultyBox = new ComboBox<>();
-    private Slider fpsSlider = new Slider(FPS_MIN, FPS_DEFAULT, FPS_MAX );
+    private Settings settings;
 
-
-    private  Stage popup = new Stage();
-    private Label label = new Label("Hier sind die Einstellungen.");
-    private VBox popupLayout = new VBox(15);
-    private Scene popupScene = new Scene(popupLayout, SETTINGS_WIDTH, SETTINGS_HEIGHT);
-
-
-    private VBox levelOverlay;
-    private Button confirmButton = new Button("Level starten");
-    private Button cancelButton = new Button("Zurück");
-    private Button selectEasyLevelButton = new Button("Easy");
-    private Button selectMediumLevelButton = new Button("Medium");
-    private Button selectHardLevelButton = new Button("Hard");
-    private Button selectCustomLevelButton = new Button("Custom Level");
-
-
-    private Stage builderStage = new Stage();
-    private BorderPane builderOverlay = new BorderPane();
-    private Scene builderScene = new Scene(builderOverlay);
-    private Pane builderPane;
-    private Button placeBox = new Button("Box");
-    private Button placeBall = new Button("Ball");
-    private Button placeStart = new Button("StartPoint");
-    private Button exitButton = new Button("Exit");
-    private TextField gravityXInput = new TextField();
-    private TextField gravityYInput = new TextField();
-    private TextField nameInput = new TextField();
-
+    private LevelBuilder levelBuilder;
 
     private StartModel model;
 
@@ -77,54 +44,22 @@ public class StartView extends View {
      */
     public StartView() {
 
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.getChildren().addAll(startLabel,
-                                        startButton,
-                                        levelBuilderBTN,
-                                        settingsButton);
+        startScreen = new StartScreen();
 
-        // Overlay-Placeholder vorbereiten
-        levelOverlay = createLevelOverlay();
-        levelOverlay.setVisible(false); // Nur anzeigen, wenn gebraucht
+        levelOverlay = new LevelOverlay();
 
-        builderOverlay = createLevelBuilder();
-        builderStage.setTitle("Level Builder");
-        builderStage.setFullScreen(true);
-        builderStage.initModality(Modality.APPLICATION_MODAL);
-        builderStage.setScene(builderScene);
+        settings = new Settings();
 
+        levelBuilder = new LevelBuilder();
 
-        root.getChildren().addAll(mainLayout, levelOverlay);
+        root.getChildren().addAll(startScreen.mainLayout, levelOverlay.levelOverlay);
         setRoot(root);
 
         getRoot().getStylesheets().add(
                 getClass().getResource("/style/style.css").toExternalForm()
         );
 
-        popupScene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
 
-        startLabel.getStyleClass().add("label-title");
-        settingsButton.getStyleClass().add("button");
-        startButton.getStyleClass().add("button");
-        label.getStyleClass().add("popup-label");
-        popupLayout.getStyleClass().add("popup");
-
-        popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Settings");
-
-        fpsSlider.setShowTickLabels(true);
-        fpsSlider.setMajorTickUnit(30);
-        fpsSlider.setShowTickMarks(true);
-
-        difficultyBox.getItems().addAll(Difficulty.values());
-
-        popupLayout.setAlignment(Pos.CENTER);
-        popupLayout.setStyle("-fx-padding: 20;");
-        popupLayout.getChildren().addAll(
-                new Label("Difficulty:"), difficultyBox,
-                new Label("FPS:"), fpsSlider,
-                saveSettingsButton
-        );
     }
 
     /**
@@ -133,7 +68,7 @@ public class StartView extends View {
      * @param startButton the Button to associate with the Start Button of this view
      */
     public void setStartButton(Button startButton) {
-        this.startButton = startButton;
+        this.startScreen.startButton = startButton;
     }
 
     /**
@@ -142,7 +77,7 @@ public class StartView extends View {
      * @return the Button associated with the Start Button of this View
      */
     public Button getStartButton() {
-        return startButton;
+        return startScreen.startButton;
     }
 
     /**
@@ -151,11 +86,11 @@ public class StartView extends View {
      * @return the Button associated with the Level Builder Button of this View
      */
     public Button getLevelBuilderBTN() {
-        return levelBuilderBTN;
+        return startScreen.levelBuilderBTN;
     }
 
-    public void setSettingsButton(Button settingsButton) {
-        this.settingsButton = settingsButton;
+    public Button getCloseGameBTN() {
+        return startScreen.closerButton;
     }
 
     /**
@@ -164,7 +99,7 @@ public class StartView extends View {
      * @return the Button associated with the Settings Button of this View
      */
     public Button getSettingsButton() {
-        return settingsButton;
+        return startScreen.settingsButton;
     }
 
     /**
@@ -173,7 +108,7 @@ public class StartView extends View {
      * @return the Button associated with Save Settings Button of this View
      */
     public Button getSaveSettingsButton() {
-        return saveSettingsButton;
+        return settings.saveSettingsButton;
     }
 
     /**
@@ -182,7 +117,7 @@ public class StartView extends View {
      * @return the Button associated with the Cancel Button
      */
     public Button getCancelButton() {
-        return cancelButton;
+        return levelOverlay.cancelButton;
     }
 
     /**
@@ -191,7 +126,7 @@ public class StartView extends View {
      * @return the Button associated with the ExitLevelBuilder Button
      */
     public Button getBuilderExitBTN(){
-        return exitButton;
+        return levelBuilder.exitButton;
     }
 
     /**
@@ -200,7 +135,7 @@ public class StartView extends View {
      * @return the Button associated with the EasyLevel Button
      */
     public Button getEasyLevelButton() {
-        return selectEasyLevelButton;
+        return levelOverlay.selectEasyLevelButton;
     }
 
     /**
@@ -209,7 +144,7 @@ public class StartView extends View {
      * @return the Button associated with the MediumLevel Button
      */
     public Button getMediumLevelButton() {
-        return selectMediumLevelButton;
+        return levelOverlay.selectMediumLevelButton;
     }
 
     /**
@@ -218,7 +153,7 @@ public class StartView extends View {
      * @return the Button associated with the HardLevel Button
      */
     public Button getHardLevelButton() {
-        return selectHardLevelButton;
+        return levelOverlay.selectHardLevelButton;
     }
 
     /**
@@ -227,7 +162,7 @@ public class StartView extends View {
      * @return the Button associated with the CustomLevel Button
      */
     public Button getCustomLevelButton() {
-        return selectCustomLevelButton;
+        return levelOverlay.selectCustomLevelButton;
     }
 
     /**
@@ -236,7 +171,7 @@ public class StartView extends View {
      * @return the ComboBox instance
      */
     public ComboBox<Difficulty> getDifficultyBox() {
-        return difficultyBox;
+        return settings.difficultyBox;
     }
 
     /**
@@ -245,7 +180,7 @@ public class StartView extends View {
      * @return the Slider instance for choosing the FPS
      */
     public Slider getFpsSlider() {
-        return fpsSlider;
+        return settings.fpsSlider;
     }
 
     /**
@@ -254,7 +189,7 @@ public class StartView extends View {
      * @return the Textfield instance
      */
     public TextField getNameInput() {
-        return nameInput;
+        return levelBuilder.nameInput;
     }
 
 
@@ -264,7 +199,7 @@ public class StartView extends View {
      * @return the Textfield instance
      */
     public TextField getGravityXInput() {
-        return gravityXInput;
+        return levelBuilder.gravityXInput;
     }
 
     /**
@@ -273,7 +208,7 @@ public class StartView extends View {
      * @return the Textfield instance
      */
     public TextField getGravityYInput() {
-        return gravityYInput;
+        return levelBuilder.gravityYInput;
     }
 
     /**
@@ -282,7 +217,12 @@ public class StartView extends View {
      * @return the Button associated with placing a Box
      */
     public Button getPlaceBox() {
-        return placeBox;
+        return levelBuilder.placeBox;
+    }
+
+
+    public Button getPlaceBall() {
+        return levelBuilder.placeBall;
     }
 
 
@@ -314,7 +254,7 @@ public class StartView extends View {
      * @return the Pane instance of the BuilderPane
      */
     public Pane getBuilder() {
-        return builderPane;
+        return levelBuilder.builderPane;
     }
 
 
@@ -324,7 +264,7 @@ public class StartView extends View {
      * @return the Stage containing all the UI for the Level Builder
      */
     public Stage getBuilderStage() {
-        return builderStage;
+        return levelBuilder.builderStage;
     }
 
 
@@ -336,118 +276,27 @@ public class StartView extends View {
     public void update() {
 
           if(model.getShowSettings()) {
-              popup.setScene(popupScene);
-              popup.showAndWait();
-          }else  {
-              popup.close();
+              settings.popup.setScene(settings.popupScene);
+              settings.popup.showAndWait();
+          } else  {
+              settings.popup.close();
           }
 
           if(model.getShowBuilder()) {
 
-              builderStage.setScene(builderScene);
-              builderStage.showAndWait();
+              levelBuilder.builderStage.setScene(levelBuilder.builderScene);
+              levelBuilder.builderStage.showAndWait();
           } else {
-              builderStage.close();
+
+              levelBuilder.builderStage.close();
           }
 
 
-          levelOverlay.setVisible(model.getShowLevelOverlay());
+          levelOverlay.levelOverlay.setVisible(model.getShowLevelOverlay());
 
 
     }
 
-    /**
-     * Creates the overlay used for level selection.
-     *
-     * @return a VBox containing buttons and labels for selecting levels
-     */
-    private VBox createLevelOverlay() {
-        VBox overlay = new VBox(10);
-        overlay.setAlignment(Pos.CENTER);
-        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 1); -fx-padding: 20;");
-        overlay.setMaxWidth(400);
-        overlay.setMaxHeight(300);
-
-        Label title = new Label("Level auswählen");
-        title.getStyleClass().add("label-title");
-
-
-        HBox selectLevel = new HBox(10, selectEasyLevelButton, selectMediumLevelButton, selectHardLevelButton);
-        HBox cancelButtonRow = new HBox(10, confirmButton, cancelButton);
-        cancelButtonRow.setAlignment(Pos.CENTER);
-
-        overlay.getChildren().addAll(title, selectLevel,selectCustomLevelButton, cancelButtonRow);
-
-        return overlay;
-    }
-
-    /**
-     * Creates the layout for the level builder UI.
-     * Sets up the main builder pane, sidebars, input fields, and bottom bar.
-     *
-     * @return a BorderPane containing the level builder UI components
-     */
-    private BorderPane createLevelBuilder() {
-        builderPane = new Pane();
-        builderPane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH);
-        builderPane.setStyle("-fx-background-color: lightgray;");
-
-        VBox sidebarLeft = new VBox();
-        sidebarLeft.setPrefWidth(SIDEBAR_LEFT_WIDTH);
-        sidebarLeft.setStyle("-fx-background-color: rgba(0,255,0);");
-        sidebarLeft.getChildren().addAll(placeStart);
-
-        VBox sidebarRight = new VBox();
-        sidebarRight.setPrefWidth(SIDEBAR_RIGHT_WIDTH);
-        sidebarRight.setStyle("-fx-background-color: rgba(255,0,0);");
-        sidebarRight.getChildren().addAll(placeBall, placeBox);
-
-        // Levelname-Eingabe
-        Label nameLabel = new Label("Levelname:");
-        nameInput.setPrefWidth(120);
-        VBox nameBox = new VBox(5, nameLabel, nameInput);
-        nameBox.setAlignment(Pos.CENTER_LEFT);
-
-// Gravitation-Eingabe
-        Label gravityTitleLabel = new Label("Gravitation:");
-        Label gravityXLabel = new Label("X:");
-        gravityXInput.setPrefWidth(60);
-
-        Label gravityYLabel = new Label("Y:");
-        gravityYInput.setPrefWidth(60);
-
-        HBox gravityXYBox = new HBox(10,
-                new VBox(5, gravityXLabel, gravityXInput),
-                new VBox(5, gravityYLabel, gravityYInput)
-        );
-        gravityXYBox.setAlignment(Pos.CENTER_LEFT);
-
-        VBox gravityBox = new VBox(5, gravityTitleLabel, gravityXYBox);
-        gravityBox.setAlignment(Pos.CENTER_LEFT);
-
-// BottomBar
-        HBox bottomBar = new HBox(20); // Mehr Abstand für bessere Lesbarkeit
-        bottomBar.setPrefHeight(BOTTOMBAR_HEIGHT);
-        bottomBar.setPadding(new Insets(5));
-        bottomBar.setStyle("-fx-background-color: rgba(0,0,0);");
-        bottomBar.setAlignment(Pos.CENTER_LEFT);
-        bottomBar.getChildren().addAll(
-                exitButton,
-                nameBox,
-                gravityBox
-        );
-
-        BorderPane layout = new BorderPane();
-        layout.setCenter(builderPane);
-        layout.setLeft(sidebarLeft);
-        layout.setRight(sidebarRight);
-        layout.setBottom(bottomBar);
-
-        builderScene = new Scene(layout);
-
-        return layout;
-
-    }
 
 
     /**
@@ -456,10 +305,10 @@ public class StartView extends View {
      */
     public void resetBuilderUI() {
 
-        builderPane.getChildren().clear();
+        levelBuilder.builderPane.getChildren().clear();
 
-        nameInput.clear();
-        gravityXInput.clear();
-        gravityYInput.clear();
+        levelBuilder.nameInput.clear();
+        levelBuilder.gravityXInput.clear();
+        levelBuilder.gravityYInput.clear();
     }
 }

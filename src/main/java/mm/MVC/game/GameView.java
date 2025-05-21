@@ -43,7 +43,9 @@ public class GameView extends View {
         gamePane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH);
         gamePane.setStyle("-fx-background-color: lightgray;");
 
-
+        gamePane.setOnMousePressed(e -> {
+            System.out.println("Mouse pressed at sceneX=" + e.getSceneX() + ", sceneY=" + e.getSceneY());
+        });
 
         VBox sidebarLeft = new VBox();
         sidebarLeft.setPrefWidth(SIDEBAR_LEFT_WIDTH);

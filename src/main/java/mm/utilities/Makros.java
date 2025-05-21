@@ -25,7 +25,7 @@ public class Makros {
     public static final float BOTTOMBAR_HEIGHT = 150;
 
     /** Height of the main game pane, calculated based on screen height minus bottom bar */
-    public static final float GAMEPANE_HEIGHT = (float)Screen.getPrimary().getVisualBounds().getHeight() - BOTTOMBAR_HEIGHT;
+    public static final float GAMEPANE_HEIGHT = 930;
 
     /** Width of the main game pane, calculated based on screen width minus sidebars */
     public static final float GAMEPANE_WIDTH = (float)Screen.getPrimary().getVisualBounds().getWidth() - SIDEBAR_LEFT_WIDTH - SIDEBAR_RIGHT_WIDTH;

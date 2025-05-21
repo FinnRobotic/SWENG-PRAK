@@ -102,7 +102,8 @@ public class GameDef {
                     // Umwandeln von ObjectConf zu BoxConf und Erstellen einer Box
                     BoxConf boxConf = (BoxConf) object;
                     Box box = new Box(boxConf, world);
-                    System.out.println("Dies ist eine Box: x = " + boxConf.x + ", y = " + boxConf.y + ", width = " + boxConf.width + ", height = " + boxConf.height);
+                    System.out.println("Dies ist eine Box: x = " + boxConf.x + ", y = " + boxConf.y + ", width = " + boxConf.width + ", height = " + boxConf.height
+                            + ", density = " + boxConf.density + ", friction = " + boxConf.friction);
                     addBody(box);
 
                     break;

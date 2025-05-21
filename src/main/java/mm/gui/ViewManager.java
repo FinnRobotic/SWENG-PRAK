@@ -87,6 +87,7 @@ public class ViewManager {
         // Not implemented yet
     }
 
-
-
+    public Stage getStage() {
+        return stage;
+    }
 }

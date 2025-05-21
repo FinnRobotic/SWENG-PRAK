@@ -27,6 +27,21 @@ public class Level {
     /** List of object configurations included in the level */
     private List<ObjectConf> objects;
 
+    private Vec2 startPosition;
+
+    private int numSmallBox;
+
+    private int numMediumBox;
+
+    private int numBigBox;
+
+    private int  numSmallBall;
+
+    private int  numMediumBall;
+
+    private int  numBigBall;
+
+
 
     /**
      * Constructs a new Level with default settings:

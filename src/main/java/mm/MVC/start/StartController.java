@@ -1,7 +1,6 @@
 package mm.MVC.start;
 
 
-import javafx.event.Event;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import mm.gui.ViewManager;
@@ -9,9 +8,9 @@ import mm.utilities.GameDef;
 import mm.utilities.Level;
 
 
-import javax.swing.text.View;
 import java.io.IOException;
 
+import static mm.utilities.HelperUI.addDraggableBall;
 import static mm.utilities.HelperUI.addDraggableResizableRotatableBox;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromDirectory;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromFile;
@@ -46,8 +45,6 @@ public class StartController {
 
        setSettings(view, viewManager);
 
-
-
     }
 
     /**
@@ -67,6 +64,12 @@ public class StartController {
 
         view.getLevelBuilderBTN().setOnAction(e -> {
             view.getModel().startBuilder();
+        });
+
+        view.getCloseGameBTN().setOnAction(e -> {
+
+            viewManager.getStage().close();
+
         });
 
     }
@@ -96,7 +99,7 @@ public class StartController {
      * @param view        The StartView.
      * @param viewManager The ViewManager.
      */
-    public void loadMediumLevel(StartView view,ViewManager viewManager) {
+    private void loadMediumLevel(StartView view,ViewManager viewManager) {
         String filePath = "src/main/resources/level/medium.json";
         try {
             Level level = loadLevelFromFile(filePath);
@@ -117,7 +120,7 @@ public class StartController {
      * @param view        The StartView.
      * @param viewManager The ViewManager.
      */
-    public void loadCustomLevel(StartView view, ViewManager viewManager) {
+    private void loadCustomLevel(StartView view, ViewManager viewManager) {
         try {
             Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
             System.out.println("Level Name: " + level.getName());
@@ -157,8 +160,15 @@ public class StartController {
             view.resetBuilderUI();
         });
         view.getBuilderStage().getScene().setOnKeyPressed(e -> {checkBoxInputs(view, e);});
+
         view.getPlaceBox().setOnAction(e -> {
             view.getModel().getBuilderLevel().addObject(addDraggableResizableRotatableBox(view.getBuilder()));
+        });
+
+        view.getPlaceBall().setOnAction(e -> {
+
+            view.getModel().getBuilderLevel().addObject(addDraggableBall(view.getBuilder()));
+
         });
     }
 
@@ -168,7 +178,7 @@ public class StartController {
      * @param view The StartView.
      * @param e    The KeyEvent received from input.
      */
-    public void checkBoxInputs(StartView view, KeyEvent e) {
+    private void checkBoxInputs(StartView view, KeyEvent e) {
 
         Boolean gravityXBoxSelected = view.getGravityXInput().isFocused();
         Boolean gravityYBoxSelected = view.getGravityYInput().isFocused();
