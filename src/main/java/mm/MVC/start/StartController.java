@@ -21,16 +21,9 @@ public class StartController {
 
     public void setView(StartView view, ViewManager viewManager) {
 
-        view.getStartButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
-        view.getCancelButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
+       setStart(view, viewManager);
 
-        view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
-
-        view.getLevelBuilderBTN().setOnAction(e -> view.getModel().startBuilder());
-        view.getBuilderExitBTN().setOnAction(e -> {
-            view.getModel().saveAndCloseBuilder(view);
-            view.resetBuilderUI();
-        });
+       setLevelBuilder(view, viewManager);
 
 
         view.getSaveSettingsButton().setOnAction(e -> {
@@ -44,31 +37,16 @@ public class StartController {
 
 
 
+    }
 
-
-
+    private void setStart(StartView view, ViewManager viewManager) {
+        view.getStartButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
+        view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
+        view.getCancelButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
+        view.getLevelBuilderBTN().setOnAction(e -> view.getModel().startBuilder());
         view.getMediumLevelButton().setOnAction(e -> loadMediumLevel(view, viewManager));
-
-
-
-
-
         view.getCustomLevelButton().setOnAction(e -> {
-            try {
-                Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
-                System.out.println("Level Name: " + level.getName());
-                System.out.println("Difficulty: " + level.getDifficulty());
-                viewManager.showGameView(level,view.getModel().getGameDef());
-
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        view.getBuilderStage().getScene().setOnKeyPressed(e -> {checkBoxInputs(view, e);});
-
-        view.getPlaceBox().setOnAction(e -> {
-            view.getModel().getBuilderLevel().addObject(addDraggableResizableRotatableBox(view.getBuilder()));
+            loadCustomLevel(view, viewManager);
         });
     }
 
@@ -86,6 +64,29 @@ public class StartController {
             e.printStackTrace();
             System.out.println("Fehler beim Laden des Levels.");
         }
+    }
+
+    public void loadCustomLevel(StartView view, ViewManager viewManager) {
+        try {
+            Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
+            System.out.println("Level Name: " + level.getName());
+            System.out.println("Difficulty: " + level.getDifficulty());
+            viewManager.showGameView(level,view.getModel().getGameDef());
+
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void setLevelBuilder(StartView view, ViewManager viewManager) {
+        view.getBuilderExitBTN().setOnAction(e -> {
+            view.getModel().saveAndCloseBuilder(view);
+            view.resetBuilderUI();
+        });
+        view.getBuilderStage().getScene().setOnKeyPressed(e -> {checkBoxInputs(view, e);});
+        view.getPlaceBox().setOnAction(e -> {
+            view.getModel().getBuilderLevel().addObject(addDraggableResizableRotatableBox(view.getBuilder()));
+        });
     }
 
     public void checkBoxInputs(StartView view, KeyEvent e) {

@@ -3,10 +3,7 @@ package mm.MVC.game;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Shape;
-import javafx.stage.Screen;
 import mm.MVC.View;
 import mm.utilities.PhysicsObjects.RigidBody;
 
