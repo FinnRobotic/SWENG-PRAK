@@ -8,7 +8,15 @@ import mm.utilities.ObjectsConf.ObjectConf;
 
 import static mm.utilities.JSON.JSONLevelIO.saveToFileWithDirectoryChooser;
 
-
+/**
+ * The StartModel class represents the data and state for the start screen of the application.
+ * It extends Observable to notify registered observers about changes in its state.
+ * <p>
+ * This model manages flags for showing/hiding UI components such as the settings popup,
+ * level selection overlay, and level builder. It also holds the current GameDef and
+ * the Level being edited in the level builder.
+ * </p>
+ */
 public class StartModel extends Observable {
 
     private GameDef gameDef;
@@ -21,55 +29,99 @@ public class StartModel extends Observable {
 
     private Level builderLevel;
 
+    /**
+     * Constructs a new StartModel with a fresh GameDef.
+     */
+    public StartModel() {
+        this.gameDef = new GameDef();
+    }
+
+
+    /**
+     * Toggles the visibility state of the settings popup.
+     * Notifies observers after changing the state.
+     */
     public void toggleSettings() {
         showSettings = !showSettings;
         notifyObservers();
     }
 
+    /**
+     * Toggles the visibility state of the level selection overlay.
+     * Notifies observers after changing the state.
+     */
     public void toggleLevelOverlay() {
         showLevelOverlay = !showLevelOverlay;
         notifyObservers();
     }
 
-    public void toggleBuilder() {
-        showBuilder = !showBuilder;
-        notifyObservers();
-    }
 
+    /**
+     * Returns whether the settings popup should be shown.
+     *
+     * @return true if settings popup is visible, false otherwise
+     */
     public boolean getShowSettings() {
         return showSettings;
     }
 
+    /**
+     * Returns whether the level selection overlay should be shown.
+     *
+     * @return true if level overlay is visible, false otherwise
+     */
     public Boolean getShowLevelOverlay() {
         return showLevelOverlay;
     }
 
+    /**
+     * Returns whether the level builder window should be shown.
+     *
+     * @return true if builder window is visible, false otherwise
+     */
     public Boolean getShowBuilder() {
         return showBuilder;
 
     }
 
+    /**
+     * Returns the current level being edited in the level builder.
+     *
+     * @return the builder Level instance
+     */
     public Level getBuilderLevel() {
         return builderLevel;
     }
 
 
-    public StartModel() {
-        this.gameDef = new GameDef();
-    }
-
+    /**
+     * Returns the GameDef instance associated with this model.
+     *
+     * @return the GameDef instance
+     */
     public GameDef getGameDef() {
         return this.gameDef;
     }
 
 
-
+    /**
+     * Starts a new level builder session by creating a new Level instance,
+     * setting the builder visibility to true, and notifying observers.
+     */
     public void startBuilder() {
         this.builderLevel = new Level();
         this.showBuilder = true;
         notifyObservers();
     }
 
+
+    /**
+     * Saves the current builder level to file using a directory chooser dialog,
+     * closes the builder window, and notifies observers.
+     * Prints debug information about objects in the level.
+     *
+     * @param view the StartView instance used to get the window for the directory chooser
+     */
     public void saveAndCloseBuilder(StartView view) {
         this.showBuilder = false;
 

@@ -9,6 +9,17 @@ import mm.utilities.PhysicsObjects.RigidBody;
 
 import static mm.utilities.Makros.*;
 
+
+/**
+ * The GameView class represents the visual interface for the game simulation.
+ *
+ * It contains the game pane where physics objects are rendered,
+ * control buttons such as start/stop, and manages the animation timer
+ * that updates the simulation frames.
+ *
+ * Extends the base View class and implements Observer pattern to
+ * react to model updates.
+ */
 public class GameView extends View {
 
 
@@ -20,6 +31,12 @@ public class GameView extends View {
 
     private AnimationTimer gameTimer;
 
+
+    /**
+     * Constructs a new GameView with a layout consisting of a central
+     * game pane for rendering, left and right sidebars, and a bottom bar.
+     * Sets default styles and sizes for components.
+     */
     public GameView() {
 
         gamePane = new Pane();
@@ -49,6 +66,15 @@ public class GameView extends View {
         setRoot(layout);
     }
 
+
+    /**
+     * Starts the physics simulation if it is not already running.
+     *
+     * Sets up an AnimationTimer that updates the game state each frame,
+     * handling the fixed timestep simulation logic, including accumulating
+     * delta times and advancing simulation steps accordingly.
+     * Also updates the start/stop button text.
+     */
     public void startSimulation() {
 
 
@@ -84,6 +110,10 @@ public class GameView extends View {
 
     }
 
+    /**
+     * Adds the physics bodies' shapes to the gamePane for rendering.
+     * Prints their initial translate coordinates for debugging.
+     */
     private void AddChildren() {
         for(RigidBody bd : model.getGameDef().getBodies()) {
             gamePane.getChildren().add(bd.getShape());
@@ -93,32 +123,55 @@ public class GameView extends View {
         };
     }
 
+    /**
+     * Returns the current GameModel associated with this view.
+     *
+     * @return the GameModel instance
+     */
     public GameModel getModel() {
 
         return this.model;
     }
 
 
+    /**
+     * Sets the GameModel for this view and registers this view as
+     * an observer to receive updates.
+     *
+     * @param model the GameModel to associate with this view
+     */
     public void setModel(GameModel model) {
         this.model = model;
         model.addObserver(this);
     }
 
-
+    /**
+     * Returns the Start/Stop button control.
+     *
+     * @return the start/stop Button
+     */
     public Button getStartStopBtn() {
         return btnStartStop;
     }
 
+    /**
+     * Sets the Start/Stop button control.
+     *
+     * @param btnStartStop the Button to set as the start/stop control
+     */
     public void setStartStopBtn(Button btnStartStop) {
         this.btnStartStop = btnStartStop;
     }
 
 
-
-
-
-
-
+    /**
+     * Called when the model notifies observers to update the view.
+     *
+     * Updates the physics objects' positions and rotations in the UI
+     * according to the simulation state.
+     * Starts or stops the AnimationTimer based on whether the simulation
+     * is running.
+     */
     @Override
     public void update() {
         double paneHeight = gamePane.getHeight();

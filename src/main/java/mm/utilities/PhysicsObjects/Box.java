@@ -11,6 +11,11 @@ import org.jbox2d.dynamics.World;
 
 import static mm.utilities.Makros.GAMEPANE_HEIGHT;
 import static mm.utilities.Makros.m_to_px_scale;
+
+/**
+ * Represents a rectangular rigid body in the physics simulation.
+ * This class wraps a JBox2D body and provides a corresponding JavaFX rectangle shape for rendering.
+ */
 public class Box extends RigidBody {
 
     private Rectangle rect;
@@ -18,7 +23,16 @@ public class Box extends RigidBody {
     private float width;
     private float height;
 
-
+    /**
+     * Creates a static Box with specified position, rotation, width, and height.
+     *
+     * @param x         x-position in physics world units (meters)
+     * @param y         y-position in physics world units (meters)
+     * @param gradAngle rotation angle in degrees
+     * @param width     width in meters
+     * @param height    height in meters
+     * @param world     the physics world where the body is created
+     */
     public Box(float x, float y, float gradAngle, float width, float height, World world) {
 
 
@@ -44,7 +58,18 @@ public class Box extends RigidBody {
         rect.setRotate(-gradAngle);
     }
 
-
+    /**
+     * Creates a dynamic Box with specified position, rotation, size, density, and friction.
+     *
+     * @param x         x-position in meters
+     * @param y         y-position in meters
+     * @param gradAngle rotation angle in degrees
+     * @param width     width in meters
+     * @param height    height in meters
+     * @param density   density of the material
+     * @param friction  friction coefficient
+     * @param world     the physics world where the body is created
+     */
     public Box(float x, float y, float gradAngle, float width, float height,float density, float friction, World world) {
 
         this.width = width;
@@ -74,6 +99,14 @@ public class Box extends RigidBody {
         rect.setRotate(-gradAngle);
     }
 
+    /**
+     * Creates a Box from a BoxConf configuration object.
+     * If density or friction is -1, the Box is created as static.
+     * Otherwise, it is created as dynamic with specified physical properties.
+     *
+     * @param conf  configuration object containing position, size, angle, density, and friction
+     * @param world the physics world where the body is created
+     */
     public Box(BoxConf conf, World world) {
         this.width = conf.width;
         this.height = conf.height;
@@ -126,20 +159,31 @@ public class Box extends RigidBody {
     }
 
 
-
+    /**
+     * Returns the JavaFX Rectangle shape representing this Box.
+     *
+     * @return the Rectangle shape for rendering
+     */
     @Override
     public Rectangle getShape() {
         return this.rect;
     }
-
+    /**
+     * Returns the width of the Box in meters.
+     *
+     * @return the width in meters
+     */
     public float getWidth() {
         return width;
     }
 
+    /**
+     * Returns the height of the Box in meters.
+     *
+     * @return the height in meters
+     */
     public float getHeight() {
         return height;
     }
-
-
 
 }

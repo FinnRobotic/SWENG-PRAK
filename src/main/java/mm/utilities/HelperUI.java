@@ -16,8 +16,22 @@ import mm.utilities.ObjectsConf.ObjectConf;
 
 import static mm.utilities.Makros.px_to_m_scale;
 
+
+/**
+ * Utility class providing helper methods to create UI elements
+ * for game object configuration, like draggable, resizable, and rotatable boxes.
+ */
 public class HelperUI {
 
+
+    /**
+     * Creates a draggable, resizable, and rotatable box on the given target pane.
+     * Returns an {@link ObjectConf} representing the box's configuration,
+     * which updates dynamically with user interaction.
+     *
+     * @param targetPane the Pane to which the box will be added
+     * @return an ObjectConf instance representing the configured box
+     */
     public static ObjectConf addDraggableResizableRotatableBox(Pane targetPane) {
         BoxConf conf = new BoxConf();
 
@@ -98,6 +112,12 @@ public class HelperUI {
         return conf;
     }
 
+    /**
+     * Opens a new window (stage) that allows configuring
+     * physical properties of the BoxConf such as density, friction, and static state.
+     *
+     * @param conf the BoxConf instance to configure
+     */
     private static void showBoxConfigPanel(BoxConf conf) {
         Stage configStage = new Stage();
         VBox layout = new VBox(10);

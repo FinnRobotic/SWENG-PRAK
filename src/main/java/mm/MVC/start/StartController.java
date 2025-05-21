@@ -16,16 +16,23 @@ import static mm.utilities.JSON.JSONLevelIO.loadLevelFromDirectory;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromFile;
 
 /**
- * Controller class for handling interactions in the StartView.
- * Manages user actions related to starting the game, settings, and level builder.
+ * Controller class for the Start view.
+ *
+ * Manages user interactions with the StartView UI components,
+ * processes input events, and coordinates view changes via ViewManager.
+ * Handles toggling UI elements, loading levels, starting the builder,
+ * and processing inputs from builder controls.
  */
 public class StartController {
 
+
     /**
-     * Initializes event handlers for all relevant UI components in the StartView.
+     * Sets up event handlers and binds the StartView components
+     * to actions, connecting UI interaction to model updates and
+     * navigation logic via the ViewManager.
      *
-     * @param view        The StartView instance.
-     * @param viewManager The ViewManager to switch views.
+     * @param view the StartView instance to control
+     * @param viewManager the ViewManager to switch between views
      */
     public void setView(StartView view, ViewManager viewManager) {
 
@@ -33,7 +40,7 @@ public class StartController {
 
        setLevelBuilder(view, viewManager);
 
-
+        // Save settings from UI controls and toggle settings popup off
         view.getSaveSettingsButton().setOnAction(e -> {
             GameDef gameDef = view.getModel().getGameDef();
             gameDef.difficulty = view.getDifficultyBox().getValue();

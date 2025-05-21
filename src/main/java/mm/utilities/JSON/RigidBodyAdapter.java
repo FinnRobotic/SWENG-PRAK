@@ -8,8 +8,25 @@ import mm.utilities.ObjectsConf.ObjectConf;
 
 import java.lang.reflect.Type;
 
+/**
+ * Custom Gson adapter for serializing and deserializing physics object configurations.
+ *
+ * This adapter handles polymorphic conversion between JSON and Java objects
+ * by distinguishing between different types of physics objects such as BallConf and BoxConf,
+ * based on the "type" property in the JSON.
+ */
 public class RigidBodyAdapter implements JsonDeserializer<ObjectConf>, JsonSerializer<ObjectConf> {
 
+    /**
+     * Deserialize a JSON element into an ObjectConf instance.
+     * The type of the ObjectConf is determined by the "type" property in JSON.
+     *
+     * @param json the JSON data being deserialized
+     * @param typeOfT the type of the Object to deserialize to
+     * @param context the deserialization context
+     * @return an instance of BallConf or BoxConf based on the JSON "type"
+     * @throws JsonParseException if the type is unknown or JSON is invalid
+     */
     @Override
     public ObjectConf deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
@@ -43,6 +60,15 @@ public class RigidBodyAdapter implements JsonDeserializer<ObjectConf>, JsonSeria
         }
     }
 
+    /**
+     * Serialize an ObjectConf instance into a JSON element.
+     * The JSON will contain a "type" property and fields specific to the subclass.
+     *
+     * @param src the ObjectConf object to serialize
+     * @param typeOfSrc the actual type of the source object
+     * @param context the serialization context
+     * @return a JsonElement representing the serialized ObjectConf
+     */
     @Override
     public JsonElement serialize(ObjectConf src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonObject = new JsonObject();

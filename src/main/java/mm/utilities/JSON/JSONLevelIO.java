@@ -16,28 +16,55 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Utility class for loading and saving Level objects to and from JSON files.
+ * Uses Gson with a registered adapter for polymorphic serialization and deserialization
+ * of physics object configurations (ObjectConf).
+ */
 public class JSONLevelIO {
 
-    // Gson-Instanz mit dem registrierten Adapter für RigidBody
+    /**
+     * Gson instance with registered adapter for ObjectConf polymorphism and pretty printing enabled.
+     */
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(ObjectConf.class, new RigidBodyAdapter()) // Adapter für RigidBody registrieren
             .setPrettyPrinting()
             .create();
 
-    // Methode zum Laden eines Levels aus einer JSON-Datei
+    /**
+     * Loads a Level object from a JSON file specified by the given file path.
+     *
+     * @param filePath the path to the JSON file to load the Level from
+     * @return the deserialized Level object
+     * @throws IOException if an I/O error occurs during reading the file
+     */
     public static Level loadLevelFromFile(String filePath) throws IOException {
         try (FileReader reader = new FileReader(filePath)) {
             return gson.fromJson(reader, Level.class); // Jetzt wird der RigidBodyAdapter verwendet
         }
     }
 
-    // Methode zum Speichern eines Levels in eine JSON-Datei
+    /**
+     * Saves a Level object to the specified file as JSON.
+     *
+     * @param level the Level object to save
+     * @param file  the destination file
+     * @throws IOException if an I/O error occurs during writing to the file
+     */
     public static void saveToFile(Level level, File file) throws IOException {
         try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(level, writer); // Serialisiert das Level-Objekt und schreibt es in die Datei
         }
     }
 
+    /**
+     * Opens a directory chooser dialog for the user to select a directory,
+     * then saves the given Level as a JSON file inside the selected directory.
+     *
+     * @param level       the Level object to save
+     * @param ownerWindow the owner window for the directory chooser dialog
+     * @throws IOException if an I/O error occurs during saving the file
+     */
     public static void saveToFileWithDirectoryChooser(Level level, Window ownerWindow) throws IOException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Speicherort für Level auswählen");
@@ -66,6 +93,14 @@ public class JSONLevelIO {
         }
     }
 
+    /**
+     * Opens a file chooser dialog for the user to select a JSON file
+     * and loads a Level object from the selected file.
+     *
+     * @param window the owner window for the file chooser dialog
+     * @return the loaded Level object, or null if loading fails or no file selected
+     * @throws IOException if an I/O error occurs during loading the file
+     */
     public static Level loadLevelFromDirectory(Window window) throws IOException {
         try {
             FileChooser fileChooser = new FileChooser();

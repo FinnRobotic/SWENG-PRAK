@@ -4,7 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Shape;
 import mm.MVC.View;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
@@ -13,7 +12,16 @@ import mm.utilities.Difficulty;
 
 import static mm.utilities.Makros.*;
 
-
+/**
+ * The StartView class represents the start screen of the application.
+ * It provides the main menu with options to start the game, open the level builder,
+ * and change settings. It also manages popups and overlays for level selection
+ * and the level builder UI.
+ * <p>
+ * This class extends the abstract View class and implements the Observer interface
+ * to update the view according to changes in the StartModel.
+ * </p>
+ */
 public class StartView extends View {
 
     private StackPane root = new StackPane();
@@ -61,6 +69,12 @@ public class StartView extends View {
 
     private StartModel model;
 
+
+    /**
+     * Constructs the StartView, initializing all UI components, layouts, and styles.
+     * Sets up the main menu, settings popup, level selection overlay,
+     * and level builder window with proper configurations.
+     */
     public StartView() {
 
         mainLayout.setAlignment(Pos.CENTER);
@@ -113,14 +127,29 @@ public class StartView extends View {
         );
     }
 
-
+    /**
+     * Sets the Start Button of the Start View
+     *
+     * @param startButton the Button to associate with the Start Button of this view
+     */
     public void setStartButton(Button startButton) {
         this.startButton = startButton;
     }
+
+    /**
+     * Returns the Start Button of the Start View
+     *
+     * @return the Button associated with the Start Button of this View
+     */
     public Button getStartButton() {
         return startButton;
     }
 
+    /**
+     * Returns the LevelBuilder Button of the Start View
+     *
+     * @return the Button associated with the Level Builder Button of this View
+     */
     public Button getLevelBuilderBTN() {
         return levelBuilderBTN;
     }
@@ -129,88 +158,180 @@ public class StartView extends View {
         this.settingsButton = settingsButton;
     }
 
+    /**
+     * Returns the Settings Button of the Start View
+     *
+     * @return the Button associated with the Settings Button of this View
+     */
     public Button getSettingsButton() {
         return settingsButton;
     }
 
+    /**
+     * Returns the Save Settings Button used to save the current Settings
+     *
+     * @return the Button associated with Save Settings Button of this View
+     */
     public Button getSaveSettingsButton() {
         return saveSettingsButton;
     }
 
-    public Button getConfirmButton() {
-        return confirmButton;
-    }
-
+    /**
+     * Returns the Cancel Button used to exit the Level Overlay into the Start View
+     *
+     * @return the Button associated with the Cancel Button
+     */
     public Button getCancelButton() {
         return cancelButton;
     }
 
+    /**
+     * Returns the Button used to exit the Level Builder and save the currently build Level
+     *
+     * @return the Button associated with the ExitLevelBuilder Button
+     */
     public Button getBuilderExitBTN(){
         return exitButton;
     }
 
+    /**
+     * Returns the Button used to choose to play the Easy Level
+     *
+     * @return the Button associated with the EasyLevel Button
+     */
     public Button getEasyLevelButton() {
         return selectEasyLevelButton;
     }
 
+    /**
+     * Returns the Button used to choose to play the Medium Level
+     *
+     * @return the Button associated with the MediumLevel Button
+     */
     public Button getMediumLevelButton() {
         return selectMediumLevelButton;
     }
 
+    /**
+     * Returns the Button used to choose to play the Hard Level
+     *
+     * @return the Button associated with the HardLevel Button
+     */
     public Button getHardLevelButton() {
         return selectHardLevelButton;
     }
 
+    /**
+     * Returns the Button used to choose to play a Custom Level
+     *
+     * @return the Button associated with the CustomLevel Button
+     */
     public Button getCustomLevelButton() {
         return selectCustomLevelButton;
     }
 
+    /**
+     * Returns the Box used to choose the Difficulty in Settings
+     *
+     * @return the ComboBox instance
+     */
     public ComboBox<Difficulty> getDifficultyBox() {
         return difficultyBox;
     }
 
+    /**
+     * Returns the slider used to choose the FPS
+     *
+     * @return the Slider instance for choosing the FPS
+     */
     public Slider getFpsSlider() {
         return fpsSlider;
     }
 
-
+    /**
+     * Returns the Textfield used to choose a name in the Level Builder
+     *
+     * @return the Textfield instance
+     */
     public TextField getNameInput() {
         return nameInput;
     }
 
+
+    /**
+     * Returns the Textfield used to choose the gravity in the x-axis in the LevelBuilder
+     *
+     * @return the Textfield instance
+     */
     public TextField getGravityXInput() {
         return gravityXInput;
     }
 
+    /**
+     * Returns the Textfield used to choose the gravity in the y-axis in the LevelBuilder
+     *
+     * @return the Textfield instance
+     */
     public TextField getGravityYInput() {
         return gravityYInput;
     }
 
+    /**
+     * Returns the Button used to choose to place a Box in the LevelBuilder
+     *
+     * @return the Button associated with placing a Box
+     */
     public Button getPlaceBox() {
         return placeBox;
     }
 
+
+    /**
+     * Returns the current StartModel associated with this view.
+     *
+     * @return the StartModel instance
+     */
     public StartModel getModel() {
 
         return this.model;
     }
 
-    
+    /**
+     * Sets the StartModel associated with this view.
+     * Registers this view as an observer of the model and triggers an initial update.
+     *
+     * @param model the StartModel to associate with this view
+     */
     public void setModel(StartModel model) {
         this.model = model ;
         model.addObserver(this);
         update();
     }
 
+    /**
+     * Returns the Builder Pane containing the Shapes currently used in the Level Builder
+     *
+     * @return the Pane instance of the BuilderPane
+     */
     public Pane getBuilder() {
         return builderPane;
     }
 
+
+    /**
+     * Returns the Window used to display the Level Builder
+     *
+     * @return the Stage containing all the UI for the Level Builder
+     */
     public Stage getBuilderStage() {
         return builderStage;
     }
 
 
+    /**
+     * Updates the view according to the current state of the model.
+     * Shows or hides the settings popup, level builder window, and level overlay.
+     */
     @Override
     public void update() {
 
@@ -235,6 +356,11 @@ public class StartView extends View {
 
     }
 
+    /**
+     * Creates the overlay used for level selection.
+     *
+     * @return a VBox containing buttons and labels for selecting levels
+     */
     private VBox createLevelOverlay() {
         VBox overlay = new VBox(10);
         overlay.setAlignment(Pos.CENTER);
@@ -255,7 +381,12 @@ public class StartView extends View {
         return overlay;
     }
 
-
+    /**
+     * Creates the layout for the level builder UI.
+     * Sets up the main builder pane, sidebars, input fields, and bottom bar.
+     *
+     * @return a BorderPane containing the level builder UI components
+     */
     private BorderPane createLevelBuilder() {
         builderPane = new Pane();
         builderPane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH);
@@ -318,6 +449,11 @@ public class StartView extends View {
 
     }
 
+
+    /**
+     * Clears the builder UI inputs and removes all child nodes from the builder pane.
+     * Resets the builder to its initial empty state.
+     */
     public void resetBuilderUI() {
 
         builderPane.getChildren().clear();
