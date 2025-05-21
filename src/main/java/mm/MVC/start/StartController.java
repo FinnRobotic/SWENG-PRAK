@@ -15,10 +15,18 @@ import static mm.utilities.HelperUI.addDraggableResizableRotatableBox;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromDirectory;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromFile;
 
-// To be implemented
+/**
+ * Controller class for handling interactions in the StartView.
+ * Manages user actions related to starting the game, settings, and level builder.
+ */
 public class StartController {
 
-
+    /**
+     * Initializes event handlers for all relevant UI components in the StartView.
+     *
+     * @param view        The StartView instance.
+     * @param viewManager The ViewManager to switch views.
+     */
     public void setView(StartView view, ViewManager viewManager) {
 
        setStart(view, viewManager);
@@ -39,6 +47,12 @@ public class StartController {
 
     }
 
+    /**
+     * Sets up actions for the main start menu buttons (start, settings, builder, etc.).
+     *
+     * @param view        The StartView.
+     * @param viewManager The ViewManager.
+     */
     private void setStart(StartView view, ViewManager viewManager) {
         view.getStartButton().setOnAction(actionEvent -> {view.getModel().toggleLevelOverlay();});
         view.getSettingsButton().setOnAction(e -> view.getModel().toggleSettings());
@@ -49,7 +63,12 @@ public class StartController {
             loadCustomLevel(view, viewManager);
         });
     }
-
+    /**
+     * Loads a predefined medium difficulty level from file and opens the game view.
+     *
+     * @param view        The StartView.
+     * @param viewManager The ViewManager.
+     */
     public void loadMediumLevel(StartView view,ViewManager viewManager) {
         String filePath = "src/main/resources/level/medium.json";
         try {
@@ -65,7 +84,12 @@ public class StartController {
             System.out.println("Fehler beim Laden des Levels.");
         }
     }
-
+    /**
+     * Opens a file chooser for the user to load a custom level and switches to the game view.
+     *
+     * @param view        The StartView.
+     * @param viewManager The ViewManager.
+     */
     public void loadCustomLevel(StartView view, ViewManager viewManager) {
         try {
             Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
@@ -77,7 +101,12 @@ public class StartController {
             ex.printStackTrace();
         }
     }
-
+    /**
+     * Sets up controls for the level builder UI (placing objects, exiting builder mode, etc.).
+     *
+     * @param view        The StartView.
+     * @param viewManager The ViewManager.
+     */
     private void setLevelBuilder(StartView view, ViewManager viewManager) {
         view.getBuilderExitBTN().setOnAction(e -> {
             view.getModel().saveAndCloseBuilder(view);
@@ -89,6 +118,12 @@ public class StartController {
         });
     }
 
+    /**
+     * Checks and processes user inputs in the level builder settings fields (gravity and name).
+     *
+     * @param view The StartView.
+     * @param e    The KeyEvent received from input.
+     */
     public void checkBoxInputs(StartView view, KeyEvent e) {
 
         Boolean gravityXBoxSelected = view.getGravityXInput().isFocused();
