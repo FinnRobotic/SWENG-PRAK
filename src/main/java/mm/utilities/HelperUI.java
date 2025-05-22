@@ -36,6 +36,9 @@ public class HelperUI {
      * @return an ObjectConf instance representing the configured box
      */
     public static ObjectConf addDraggableResizableRotatableBox(Pane targetPane) {
+
+        float height = (float)targetPane.getHeight();
+
         BoxConf conf = new BoxConf();
 
         Rectangle rect = new Rectangle(100, 50);
@@ -78,12 +81,12 @@ public class HelperUI {
             rect.setLayoutY(newY);
 
             conf.x = (float) newX * px_to_m_scale;
-            conf.y = (float)(GAMEPANE_HEIGHT - newY) * px_to_m_scale;
+            conf.y = (float)(height - newY) * px_to_m_scale;
 
             System.out.printf("layoutX: %.2f, layoutY: %.2f%n", rect.getLayoutX(), rect.getLayoutY());
             System.out.printf("conf.x: %.2f, conf.y: %.2f%n", conf.x, conf.y);
             System.out.printf("Real X: %f Real Y: %f\n", rect.getTranslateX(), rect.getTranslateY());
-            System.out.println(GAMEPANE_HEIGHT - newY);
+            System.out.println(height - newY);
         });
 
         rect.setOnKeyPressed(e -> {
@@ -160,6 +163,9 @@ public class HelperUI {
     }
 
     public static BallConf addDraggableBall(Pane targetPane) {
+
+        float height = (float) targetPane.getHeight();
+
         float initialRadius = 25; // px
 
         Circle circle = new Circle(initialRadius, Color.ORANGE);
@@ -173,7 +179,7 @@ public class HelperUI {
 
         BallConf conf = new BallConf(
                 (float) initialX * px_to_m_scale,
-                (float) (GAMEPANE_HEIGHT - initialY) * px_to_m_scale,
+                (float) (height - initialY) * px_to_m_scale,
                 initialRadius * px_to_m_scale
         );
 
@@ -196,7 +202,7 @@ public class HelperUI {
             circle.setLayoutY(newY);
 
             conf.x = (float) newX * px_to_m_scale;
-            conf.y = (float) (GAMEPANE_HEIGHT - newY) * px_to_m_scale;
+            conf.y = (float) (height - newY) * px_to_m_scale;
 
             System.out.printf("Ball pos: layoutX=%.2f layoutY=%.2f -> conf.x=%.3f conf.y=%.3f%n",
                     newX, newY, conf.x, conf.y);
