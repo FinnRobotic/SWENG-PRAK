@@ -10,8 +10,7 @@ import mm.utilities.Level;
 
 import java.io.IOException;
 
-import static mm.utilities.HelperUI.addDraggableBall;
-import static mm.utilities.HelperUI.addDraggableResizableRotatableBox;
+import static mm.utilities.HelperUI.*;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromDirectory;
 import static mm.utilities.JSON.JSONLevelIO.loadLevelFromFile;
 
@@ -162,13 +161,18 @@ public class StartController {
         view.getBuilderStage().getScene().setOnKeyPressed(e -> {checkBoxInputs(view, e);});
 
         view.getPlaceBox().setOnAction(e -> {
-            view.getModel().getBuilderLevel().addObject(addDraggableResizableRotatableBox(view.getBuilder()));
+            view.getModel().getBuilderLevel().addObject(addDraggableBox(view.getBuilder()));
         });
 
         view.getPlaceBall().setOnAction(e -> {
 
             view.getModel().getBuilderLevel().addObject(addDraggableBall(view.getBuilder()));
+        });
 
+        view.getStartPointButton().setOnAction(e -> {
+            if(view.getModel().getBuilderLevel().StartPositionNotSet()) {
+                view.getModel().getBuilderLevel().setStartPosition(addDraggableStartPoint(view.getBuilder()));
+            }
         });
     }
 

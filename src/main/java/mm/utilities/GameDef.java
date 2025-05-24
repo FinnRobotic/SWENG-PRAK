@@ -127,6 +127,8 @@ public class GameDef {
 
         this.currentLevel = level;
 
+        //Ball GameBall = new Ball();
+
         createBodies(level.getObjects(), world);
 
         difficulty = level.getDifficulty();

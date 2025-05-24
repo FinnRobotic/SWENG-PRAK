@@ -90,6 +90,7 @@ public class StartView extends View {
     }
 
     public Button getCloseGameBTN() {
+
         return startScreen.closerButton;
     }
 
@@ -225,7 +226,9 @@ public class StartView extends View {
         return levelBuilder.placeBall;
     }
 
-
+    public Button getStartPointButton() {
+        return levelBuilder.placeStart;
+    }
     /**
      * Returns the current StartModel associated with this view.
      *

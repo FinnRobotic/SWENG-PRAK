@@ -117,6 +117,19 @@ public class Level {
         this.gravity.y = gravityY;
     }
 
+
+    public void setGravity(Vec2 gravity) {
+        this.gravity = gravity;
+    }
+
+
+    public void setStartPosition(Vec2 startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public Boolean StartPositionNotSet() {
+        return startPosition == null;
+    }
     /**
      * Returns the list of object configurations contained in the level.
      *

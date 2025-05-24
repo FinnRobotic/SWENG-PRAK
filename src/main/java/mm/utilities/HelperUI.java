@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import mm.utilities.ObjectsConf.BallConf;
 import mm.utilities.ObjectsConf.BoxConf;
 import mm.utilities.ObjectsConf.ObjectConf;
+import org.jbox2d.common.Vec2;
 
 import static mm.utilities.Makros.GAMEPANE_HEIGHT;
 import static mm.utilities.Makros.px_to_m_scale;
@@ -35,7 +36,7 @@ public class HelperUI {
      * @param targetPane the Pane to which the box will be added
      * @return an ObjectConf instance representing the configured box
      */
-    public static ObjectConf addDraggableResizableRotatableBox(Pane targetPane) {
+    public static ObjectConf addDraggableBox(Pane targetPane) {
 
         float height = (float)targetPane.getHeight();
 
@@ -227,6 +228,50 @@ public class HelperUI {
 
         targetPane.getChildren().add(circle);
         return conf;
+    }
+
+
+    public static Vec2 addDraggableStartPoint(Pane targetPane) {
+        Vec2 startpoint = new Vec2();
+
+        float height = (float) targetPane.getHeight();
+
+        float initialRadius = 10; // px
+
+        Circle circle = new Circle(initialRadius, Color.RED);
+        circle.setStroke(Color.BLACK);
+
+        double initialX = 200;
+        double initialY = 200;
+        circle.setLayoutX(initialX);
+        circle.setLayoutY(initialY);
+
+        // Drag helper
+        final class Delta {
+            double x, y;
+        }
+        Delta dragDelta = new Delta();
+
+        circle.setOnMousePressed(e -> {
+            circle.requestFocus();
+            dragDelta.x = e.getSceneX() - circle.getLayoutX();
+            dragDelta.y = e.getSceneY() - circle.getLayoutY();
+        });
+
+        circle.setOnMouseDragged(e -> {
+            double newX = e.getSceneX() - dragDelta.x;
+            double newY = e.getSceneY() - dragDelta.y;
+            circle.setLayoutX(newX);
+            circle.setLayoutY(newY);
+
+            startpoint.x = (float) newX * px_to_m_scale;
+            startpoint.y = (float) (height - newY) * px_to_m_scale;
+
+            System.out.printf("StartPoint pos: layoutX=%.2f layoutY=%.2f -> conf.x=%.3f conf.y=%.3f%n",
+                    newX, newY, startpoint.x, startpoint.y);
+        });
+        targetPane.getChildren().add(circle);
+        return startpoint;
     }
 
 
