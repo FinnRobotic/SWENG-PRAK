@@ -132,8 +132,8 @@ public class StartController {
                 obj.scaleUpRelative(view.getBuilder());
             }
 
-            level.getStartPosition().x = level.getStartPosition().x * 100 / (float)view.getBuilder().getWidth();
-            level.getStartPosition().y = level.getStartPosition().y * 100 / (float)view.getBuilder().getHeight();
+            level.getStartPosition().x = level.getStartPosition().x * (float)view.getBuilder().getWidth() / 100;
+            level.getStartPosition().y = level.getStartPosition().y * (float)view.getBuilder().getHeight() / 100;
 
 
 
@@ -184,6 +184,7 @@ public class StartController {
 
         view.getStartPointButton().setOnAction(e -> {
             if(view.getModel().getBuilderLevel().StartPositionNotSet()) {
+
                 view.getModel().getBuilderLevel().setStartPosition(addDraggableStartPoint(view.getBuilder()));
             }
         });

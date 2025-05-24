@@ -75,7 +75,7 @@ public class ViewManager {
         stage.setScene(scene);
         stage.setFullScreen(true);
 
-        view.startSimulation();
+        view.setSimulation();
 
     }
 

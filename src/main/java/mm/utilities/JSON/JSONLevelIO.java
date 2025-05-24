@@ -124,6 +124,7 @@ public class JSONLevelIO {
             return gson.fromJson(new FileReader(selectedFile), Level.class);
         } catch (IOException ex) {
             ex.printStackTrace();
+            System.out.println("Level konnte nicht geladen werden");
             return null;
         }
     }

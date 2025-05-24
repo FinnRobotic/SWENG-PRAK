@@ -25,8 +25,10 @@ public class GameModel extends Observable {
     private World world;
 
     private long lastUpdate;
+    private float gameTime;
     private float accumulator;
     private boolean simRunning;
+    private boolean resetLevel;
 
     private GameDef gameDef;
 
@@ -42,13 +44,12 @@ public class GameModel extends Observable {
         this.gameDef = gamedef;
 
         this.lastUpdate = 0;
+        this.gameTime = 0;
         this.accumulator = 0;
         this.simRunning = false;
 
         // Initialize JBox2D world with gravity from level
         this.world = new World(level.getGravity());
-
-        initPlayground();
 
         // Integrate level objects into physics world and GameDef bodies list
         this.gameDef.integrateLevel(level, world);
@@ -80,6 +81,19 @@ public class GameModel extends Observable {
     public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+
+    public float getGameTime() {
+        return gameTime;
+    }
+
+    public void resetGameTime() {
+        this.gameTime = 0;
+    }
+
+    public void incrementGameTime(float delta) {
+        this.gameTime += delta;
+    }
+
 
     /**
      * Returns the current accumulated delta time for the simulation step loop.
@@ -135,22 +149,34 @@ public class GameModel extends Observable {
         notifyObservers();
     }
 
+    public boolean isResetLevel() {
+        return this.resetLevel;
+    }
+
+    public void setResetLevel(boolean resetLevel) {
+        this.resetLevel = resetLevel;
+    }
+
+    public void toogleResetLevel() {
+        this.resetLevel = !this.resetLevel;
+    }
+
 
     /**
      * Initializes the playground boundaries (ground, ceiling, left and right walls)
      * in the physics world as static boxes positioned just outside the visible game pane.
      * These boundaries prevent physics bodies from leaving the visible area.
      */
-    private void initPlayground() {
+    public void initPlayground(float paneHeight, float paneWidth) {
 
-        float gamePaneWidthMeter = GAMEPANE_WIDTH * px_to_m_scale;
-        float gamePaneHeightMeter = GAMEPANE_HEIGHT * px_to_m_scale;
+        float gamePaneWidthMeter = paneWidth * px_to_m_scale;
+        float gamePaneHeightMeter = paneHeight * px_to_m_scale;
 
 
         Box ground = new Box(gamePaneWidthMeter /2, -1, 0,
                                     gamePaneWidthMeter, 2,this.world);
 
-        Box ceiling = new Box(gamePaneWidthMeter /2, gamePaneHeightMeter + 1.495f, 0,
+        Box ceiling = new Box(gamePaneWidthMeter /2, gamePaneHeightMeter, 0,
                                     gamePaneWidthMeter, 2,this.world);
 
         Box leftWall = new Box(-1, gamePaneHeightMeter / 2, 0, 2,
@@ -160,5 +186,36 @@ public class GameModel extends Observable {
                                     gamePaneHeightMeter, this.world);
 
     }
+
+
+    /**
+     * Resets the current level by clearing all bodies and recreating them
+     * in the given physics world.
+     *
+     */
+    public void resetLevel() {
+
+
+        this.lastUpdate = 0;
+        this.gameTime = 0;
+        this.accumulator = 0;
+        this.simRunning = false;
+
+        // Initialize JBox2D world with gravity from level
+        this.world = new World(gameDef.currentLevel.getGravity());
+
+        // Integrate level objects into physics world and GameDef bodies list
+        this.gameDef.resetLevel(world);
+        System.out.println("Reset Level");
+        resetLevel = true;
+
+        notifyObservers();
+
+
+
+    }
+
+
+
 
 }

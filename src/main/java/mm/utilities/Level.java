@@ -52,7 +52,7 @@ public class Level {
         difficulty = Difficulty.EASY;
         gravity = new Vec2(0, 0);
         objects = new ArrayList<>();
-        startPosition = new Vec2(1, 1);
+        startPosition = new Vec2(-1, -1);
     }
 
     /**
@@ -129,7 +129,7 @@ public class Level {
     }
 
     public Boolean StartPositionNotSet() {
-        return startPosition == null;
+        return startPosition.x == -1 || startPosition.y == -1;
     }
     /**
      * Returns the list of object configurations contained in the level.

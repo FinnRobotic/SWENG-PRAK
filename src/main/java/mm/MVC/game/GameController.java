@@ -22,5 +22,14 @@ public class GameController {
     public void setView(GameView view, ViewManager viewManager) {
 
         view.getStartStopBtn().setOnAction(e -> view.getModel().toggleSimRunning());
+
+        view.getResetBtn().setOnAction(e -> {
+
+            view.getModel().resetLevel();
+        });
+
+        view.getExitLevelBTN().setOnAction(e -> {
+            viewManager.showStartView();
+        });
     }
 }

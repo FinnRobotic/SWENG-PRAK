@@ -83,11 +83,10 @@ public class GameDef {
      * Creates physical bodies in the Box2D world based on the provided object configurations.
      * Currently supports BallConf and BoxConf types.
      *
-     * @param objects list of object configurations to create bodies from
      * @param world the physics World where bodies will be created
      */
-    private void createBodies(List<ObjectConf> objects, World world) {
-        for (ObjectConf object : objects) {
+    public void createBodies(World world) {
+        for (ObjectConf object : currentLevel.getObjects()) {
             switch (object.getClass().getSimpleName()) {
                 case "BallConf":
                     // Umwandeln von ObjectConf zu BallConf und Erstellen eines Balls
@@ -127,9 +126,12 @@ public class GameDef {
 
         this.currentLevel = level;
 
-        //Ball GameBall = new Ball();
+        float gameBallX = level.getStartPosition().x;
+        float gameBallY = level.getStartPosition().y;
+        Ball GameBall = new Ball(gameBallX, gameBallY, 0.2f, 0, 1, 0.01f, world);
+        addBody(GameBall);
 
-        createBodies(level.getObjects(), world);
+        createBodies(world);
 
         difficulty = level.getDifficulty();
 
@@ -137,17 +139,11 @@ public class GameDef {
 
     }
 
-    /**
-     * Resets the current level by clearing all bodies and recreating them
-     * in the given physics world.
-     *
-     * @param world the physics World where bodies should be recreated
-     */
     public void resetLevel(World world) {
         clearBodies();
-        createBodies(this.currentLevel.getObjects(), world);
-
+        integrateLevel(currentLevel, world);
     }
+
 
 
 }

@@ -176,6 +176,8 @@ public class LevelBuilder {
 
         VBox container = new VBox(counterRow);
         container.setAlignment(Pos.CENTER);
+
+
         return container;
     }
 

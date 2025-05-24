@@ -5,6 +5,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import mm.MVC.View;
+import mm.MVC.game.elementsUI.SimView;
+import mm.MVC.start.StartModel;
 import mm.utilities.PhysicsObjects.RigidBody;
 
 import static mm.utilities.Makros.*;
@@ -25,11 +27,10 @@ public class GameView extends View {
 
     private Pane gamePane;
 
-    private Button btnStartStop = new Button();
+    private SimView simView;
 
     private GameModel model;
 
-    private AnimationTimer gameTimer;
 
 
     /**
@@ -47,24 +48,13 @@ public class GameView extends View {
             System.out.println("Mouse pressed at sceneX=" + e.getSceneX() + ", sceneY=" + e.getSceneY());
         });
 
-        VBox sidebarLeft = new VBox();
-        sidebarLeft.setPrefWidth(SIDEBAR_LEFT_WIDTH);
-        sidebarLeft.setStyle("-fx-background-color: rgba(0,255,0);");
-        sidebarLeft.getChildren().add(btnStartStop);
-
-        VBox sidebarRight = new VBox();
-        sidebarRight.setPrefWidth(SIDEBAR_RIGHT_WIDTH);
-        sidebarRight.setStyle("-fx-background-color: rgba(255,0,0);");
-
-        HBox bottomBar = new HBox();
-        bottomBar.setPrefHeight(BOTTOMBAR_HEIGHT);
-        bottomBar.setStyle("-fx-background-color: rgba(0,0,0);");
+        simView = new SimView();
 
         BorderPane layout = new BorderPane();
         layout.setCenter(gamePane);
-        layout.setLeft(sidebarLeft);
-        layout.setRight(sidebarRight);
-        layout.setBottom(bottomBar);
+        layout.setLeft(simView.sideBarLeft);
+        layout.setRight(simView.sideBarRight);
+        layout.setBottom(simView.bottomBar);
         setRoot(layout);
     }
 
@@ -77,38 +67,47 @@ public class GameView extends View {
      * delta times and advancing simulation steps accordingly.
      * Also updates the start/stop button text.
      */
-    public void startSimulation() {
+    public void setSimulation() {
+
+        model.initPlayground((float)gamePane.getHeight(), (float)gamePane.getWidth());
+        addChildren();
+
+        simView.gameTimer = new AnimationTimer() {
 
 
-        AddChildren();
-
-        if(!model.isSimRunning()) {
-            gameTimer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    if (model.getLastUpdate() == 0) {
-                        model.setLastUpdate(now);
-                        return;
-                    }
-
-                    // Zeit seit letztem Frame (in Sekunden)
-                    float deltaTime = (now - model.getLastUpdate()) / 1_000_000_000f;
+            @Override
+            public void handle(long now) {
+                if (model.getLastUpdate() == 0) {
                     model.setLastUpdate(now);
-
-                    // Simulationszeit aufholen (falls Frames gedroppt wurden)
-                    model.incrAccumulator(deltaTime);
-                    float timeStep = 1.0f / model.getGameDef().FPS;
-                    while (model.getAccumulator() >= timeStep) {
-                        model.simStep();
-                        model.incrAccumulator(-timeStep);
-                    }
-
+                    return;
                 }
-            };
-            gameTimer.start();
-            model.toggleSimRunning();
-            btnStartStop.setText("Stop");
-        }
+
+
+                // Zeit seit letztem Frame (in Sekunden)
+                float deltaTime = (now - model.getLastUpdate()) / 1_000_000_000f;
+                model.setLastUpdate(now);
+
+                model.incrementGameTime(deltaTime);
+                simView.simTimeLabel.setText(String.format("Zeit: %.1fs", model.getGameTime()));
+
+                // Simulationszeit aufholen (falls Frames gedroppt wurden)
+                model.incrAccumulator(deltaTime);
+                float timeStep = 1.0f / model.getGameDef().FPS;
+                while (model.getAccumulator() >= timeStep) {
+                    model.simStep();
+                    model.incrAccumulator(-timeStep);
+                }
+                for (RigidBody bd : model.getGameDef().getBodies()) {
+                    bd.getShape().setTranslateX(bd.body.getPosition().x * m_to_px_scale);
+                    bd.getShape().setTranslateY(gamePane.getHeight() - bd.body.getPosition().y * m_to_px_scale);
+                    bd.getShape().setRotate(-Math.toDegrees(bd.body.getAngle()));
+                }
+
+            }
+        };
+
+        simView.btnStartStop.setText("Start");
+
 
     }
 
@@ -116,9 +115,12 @@ public class GameView extends View {
      * Adds the physics bodies' shapes to the gamePane for rendering.
      * Prints their initial translate coordinates for debugging.
      */
-    private void AddChildren() {
+    private void addChildren() {
+        gamePane.getChildren().clear();
         for(RigidBody bd : model.getGameDef().getBodies()) {
             bd.getShape().setTranslateY(gamePane.getHeight() - bd.body.getPosition().y * m_to_px_scale);
+            bd.getShape().setTranslateX(bd.body.getPosition().x * m_to_px_scale);
+            bd.getShape().setRotate(-Math.toDegrees(bd.body.getAngle()));
             gamePane.getChildren().add(bd.getShape());
         }
         for(Node sh : gamePane.getChildren()) {
@@ -146,6 +148,7 @@ public class GameView extends View {
     public void setModel(GameModel model) {
         this.model = model;
         model.addObserver(this);
+
     }
 
     /**
@@ -154,16 +157,19 @@ public class GameView extends View {
      * @return the start/stop Button
      */
     public Button getStartStopBtn() {
-        return btnStartStop;
+        return simView.btnStartStop;
     }
 
-    /**
-     * Sets the Start/Stop button control.
-     *
-     * @param btnStartStop the Button to set as the start/stop control
-     */
-    public void setStartStopBtn(Button btnStartStop) {
-        this.btnStartStop = btnStartStop;
+    public Button getResetBtn() {
+        return simView.reset;
+    }
+
+    public Button getToEditorBTN() {
+        return simView.toEditor;
+    }
+
+    public Button getExitLevelBTN() {
+        return simView.exitLevel;
     }
 
 
@@ -178,21 +184,40 @@ public class GameView extends View {
     @Override
     public void update() {
         double paneHeight = gamePane.getHeight();
+
+        if(model.isResetLevel()) {
+
+            simView.gameTimer.stop();
+
+            gamePane.getChildren().clear();
+
+            simView.btnStartStop.setText("Start");
+
+            setSimulation();
+
+
+            model.toogleResetLevel();
+        }
+
+
+
+
+
+
         if(!model.isSimRunning()) {
 
-            gameTimer.stop();
-            btnStartStop.setText("Start");
+            simView.gameTimer.stop();
+            simView.btnStartStop.setText("Start");
+            simView.simTimeLabel.setText(String.format("Zeit: %.1fs", model.getGameTime()));
+
+
             model.resetAccumulator();
             model.setLastUpdate(0);
 
         } else {
-            gameTimer.start();
-            btnStartStop.setText("Stop");
-            for (RigidBody bd : model.getGameDef().getBodies()) {
-                bd.getShape().setTranslateX(bd.body.getPosition().x * m_to_px_scale);
-                bd.getShape().setTranslateY(paneHeight - bd.body.getPosition().y * m_to_px_scale);
-                bd.getShape().setRotate(-Math.toDegrees(bd.body.getAngle()));
-            }
+            simView.gameTimer.start();
+            simView.btnStartStop.setText("Stop");
+
         }
     }
 }

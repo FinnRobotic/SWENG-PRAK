@@ -93,9 +93,11 @@ public class BallConf extends ObjectConf{
 
     @Override
     public void scaleUpRelative(Pane pane) {
+        System.out.println("Before: " + this.x + ", " + this.y + ", " + this.radius);
         this.x = this.x * (float)pane.getWidth() / 100;
         this.y = this.y * (float)pane.getHeight() / 100;
         this.radius = this.radius * (float)pane.getWidth() / 100;
+        System.out.println("After: " + this.x + ", " + this.y + ", " + this.radius);
     }
 
 }

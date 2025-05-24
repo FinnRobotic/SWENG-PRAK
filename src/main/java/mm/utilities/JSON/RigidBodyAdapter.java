@@ -37,8 +37,11 @@ public class RigidBodyAdapter implements JsonDeserializer<ObjectConf>, JsonSeria
             case "Ball":
                 // Extrahiere die Werte aus dem JSON und rufe den Konstruktor für BallConf auf
                 float ballX = jsonObject.get("x").getAsFloat();
+                System.out.println("ballX: " + ballX);
                 float ballY = jsonObject.get("y").getAsFloat();
+                System.out.println("ballY: " + ballY);
                 float radius = jsonObject.get("radius").getAsFloat();
+                System.out.println("radius: " + radius);
                 float BallAngle = jsonObject.has("angle") ? jsonObject.get("angle").getAsFloat() : 0;
                 float BallDensity = jsonObject.has("density") ? jsonObject.get("density").getAsFloat() : -1;
                 float BallFriction = jsonObject.has("friction") ? jsonObject.get("friction").getAsFloat() : -1;
@@ -47,9 +50,13 @@ public class RigidBodyAdapter implements JsonDeserializer<ObjectConf>, JsonSeria
             case "Box":
                 // Extrahiere die Werte aus dem JSON und rufe den Konstruktor für BoxConf auf
                 float boxX = jsonObject.get("x").getAsFloat();
+                System.out.println("boxX: " + boxX);
                 float boxY = jsonObject.get("y").getAsFloat();
+                System.out.println("boxY: " + boxY);
                 float width = jsonObject.get("width").getAsFloat();
+                System.out.println("width: " + width);
                 float height = jsonObject.get("height").getAsFloat();
+                System.out.println("height: " + height);
                 float BoxAngle = jsonObject.has("angle") ? jsonObject.get("angle").getAsFloat() : 0;
                 float BoxDensity = jsonObject.has("density") ? jsonObject.get("density").getAsFloat() : -1;
                 float BoxFriction = jsonObject.has("friction") ? jsonObject.get("friction").getAsFloat() : -1;

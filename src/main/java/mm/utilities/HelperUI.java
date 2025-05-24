@@ -236,7 +236,7 @@ public class HelperUI {
 
         float height = (float) targetPane.getHeight();
 
-        float initialRadius = 10; // px
+        float initialRadius = 5; // px
 
         Circle circle = new Circle(initialRadius, Color.RED);
         circle.setStroke(Color.BLACK);

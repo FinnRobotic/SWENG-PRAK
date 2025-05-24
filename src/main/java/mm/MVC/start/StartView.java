@@ -55,6 +55,12 @@ public class StartView extends View {
         root.getChildren().addAll(startScreen.mainLayout, levelOverlay.levelOverlay);
         setRoot(root);
 
+
+        levelBuilder.builderStage.setScene(levelBuilder.builderScene);
+        levelBuilder.builderStage.show();
+        levelBuilder.builderStage.close();
+
+
         getRoot().getStylesheets().add(
                 getClass().getResource("/style/style.css").toExternalForm()
         );
