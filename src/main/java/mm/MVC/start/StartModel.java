@@ -129,7 +129,13 @@ public class StartModel extends Observable {
             System.out.println("Objects im Level: " + builderLevel.getObjects().size());
             for (ObjectConf obj : builderLevel.getObjects()) {
                 System.out.println(obj.getClass().getSimpleName());
+                obj.scaleDownRelative(view.getBuilder());
             }
+
+            builderLevel.getStartPosition().x = builderLevel.getStartPosition().x * 100 / (float)view.getBuilder().getWidth();
+            builderLevel.getStartPosition().y = builderLevel.getStartPosition().y * 100 / (float)view.getBuilder().getHeight();
+
+
             saveToFileWithDirectoryChooser(builderLevel, view.getRoot().getScene().getWindow());
         } catch(Exception e) {
             e.printStackTrace();

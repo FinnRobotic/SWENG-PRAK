@@ -52,6 +52,7 @@ public class Level {
         difficulty = Difficulty.EASY;
         gravity = new Vec2(0, 0);
         objects = new ArrayList<>();
+        startPosition = new Vec2(1, 1);
     }
 
     /**
@@ -124,5 +125,9 @@ public class Level {
      */
     public List<ObjectConf> getObjects() {
         return objects;
+    }
+
+    public Vec2 getStartPosition() {
+        return startPosition;
     }
 }

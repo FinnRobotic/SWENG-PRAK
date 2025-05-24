@@ -1,6 +1,8 @@
 package mm.utilities.ObjectsConf;
 
 
+import javafx.scene.layout.Pane;
+
 /**
  * Configuration class representing a rectangular box object in the physics simulation.
  * Extends the generic ObjectConf with width, height, density, and friction properties.
@@ -103,5 +105,21 @@ public class BoxConf extends ObjectConf{
         this.density = -1;
         this.friction = -1;
 
+    }
+
+    @Override
+    public void scaleDownRelative(Pane pane) {
+        this.x = this.x * 100 / (float)pane.getWidth();
+        this.y = this.y * 100 / (float)pane.getHeight();
+        this.width = this.width * 100 / (float)pane.getWidth();
+        this.height = this.height * 100 / (float)pane.getHeight();
+    }
+
+    @Override
+    public void scaleUpRelative(Pane pane) {
+        this.x = this.x * (float)pane.getWidth() / 100;
+        this.y = this.y * (float)pane.getHeight() / 100;
+        this.width = this.width * (float)pane.getWidth() / 100;
+        this.height = this.height * (float)pane.getHeight() / 100;
     }
 }

@@ -1,5 +1,7 @@
 package mm.utilities.ObjectsConf;
 
+import javafx.scene.layout.Pane;
+
 /**
  * Configuration class representing a generic physics object.
  * Contains the position (x, y), rotation angle, and static state.
@@ -25,6 +27,11 @@ public abstract class ObjectConf {
      * Whether the object is static (does not move) or dynamic.
      */
     public Boolean isStatic;
+
+
+    public abstract void scaleDownRelative(Pane pane);
+
+    public abstract void scaleUpRelative(Pane pane);
 
 
 }
