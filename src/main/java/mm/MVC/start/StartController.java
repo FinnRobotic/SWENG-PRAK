@@ -6,6 +6,7 @@ import javafx.scene.input.KeyEvent;
 import mm.gui.ViewManager;
 import mm.utilities.GameDef;
 import mm.utilities.Level;
+import mm.utilities.ObjectsConf.ObjectConf;
 
 
 import java.io.IOException;
@@ -124,6 +125,18 @@ public class StartController {
             Level level = loadLevelFromDirectory(view.getRoot().getScene().getWindow());
             System.out.println("Level Name: " + level.getName());
             System.out.println("Difficulty: " + level.getDifficulty());
+
+            System.out.println("Objects im Level: " + level.getObjects().size());
+            for (ObjectConf obj : level.getObjects()) {
+                System.out.println(obj.getClass().getSimpleName());
+                obj.scaleUpRelative(view.getBuilder());
+            }
+
+            level.getStartPosition().x = level.getStartPosition().x * 100 / (float)view.getBuilder().getWidth();
+            level.getStartPosition().y = level.getStartPosition().y * 100 / (float)view.getBuilder().getHeight();
+
+
+
             viewManager.showGameView(level,view.getModel().getGameDef());
 
         } catch(Exception ex) {

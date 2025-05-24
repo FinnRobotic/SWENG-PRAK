@@ -118,6 +118,7 @@ public class GameView extends View {
      */
     private void AddChildren() {
         for(RigidBody bd : model.getGameDef().getBodies()) {
+            bd.getShape().setTranslateY(gamePane.getHeight() - bd.body.getPosition().y * m_to_px_scale);
             gamePane.getChildren().add(bd.getShape());
         }
         for(Node sh : gamePane.getChildren()) {

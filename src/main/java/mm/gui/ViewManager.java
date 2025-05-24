@@ -61,9 +61,10 @@ public class ViewManager {
      */
     public void showGameView(Level level, GameDef gamedef) {
 
-        GameModel model = new GameModel(gamedef, level);
 
         GameView view = new GameView();
+
+        GameModel model = new GameModel(gamedef, level);
 
         view.setModel(model);
 

@@ -1,6 +1,8 @@
 package mm.utilities.ObjectsConf;
 
 
+import javafx.scene.layout.Pane;
+
 /**
  * Configuration class representing a ball object in the physics simulation.
  * Extends the generic ObjectConf with radius, density, and friction properties.
@@ -81,6 +83,20 @@ public class BallConf extends ObjectConf{
         this.friction = -1;
     }
 
+
+    @Override
+    public void scaleDownRelative(Pane pane) {
+        this.x = this.x * 100 / (float)pane.getWidth();
+        this.y = this.y * 100 / (float)pane.getHeight();
+        this.radius = this.radius * 100 / (float)pane.getWidth();
+    }
+
+    @Override
+    public void scaleUpRelative(Pane pane) {
+        this.x = this.x * (float)pane.getWidth() / 100;
+        this.y = this.y * (float)pane.getHeight() / 100;
+        this.radius = this.radius * (float)pane.getWidth() / 100;
+    }
 
 }
 
