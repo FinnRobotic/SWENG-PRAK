@@ -17,8 +17,7 @@ import mm.utilities.ObjectsConf.BoxConf;
 import mm.utilities.ObjectsConf.ObjectConf;
 import org.jbox2d.common.Vec2;
 
-import static mm.utilities.Makros.GAMEPANE_HEIGHT;
-import static mm.utilities.Makros.px_to_m_scale;
+import static mm.utilities.Makros.*;
 
 
 /**
@@ -78,15 +77,28 @@ public class HelperUI {
         rect.setOnMouseDragged(e -> {
             double newX = e.getSceneX() - dragDelta.x;
             double newY = e.getSceneY() - dragDelta.y;
-            rect.setLayoutX(newX);
-            rect.setLayoutY(newY);
 
-            conf.x = (float) newX * px_to_m_scale;
-            conf.y = (float)(height - newY) * px_to_m_scale;
+            double angle = Math.toRadians(rect.getRotate());
+            double w = rect.getWidth();
+            double h = rect.getHeight();
+
+            // Effektive Breite und Höhe nach Rotation (Bounding Box)
+            double rotatedWidth = Math.abs(w * Math.cos(angle)) + Math.abs(h * Math.sin(angle));
+            double rotatedHeight = Math.abs(w * Math.sin(angle)) + Math.abs(h * Math.cos(angle));
+
+            // Halbe Breite/Höhe für spätere Begrenzung (da Mittelpunkt gesetzt wird)
+            double halfW = rotatedWidth / 2;
+            double halfH = rotatedHeight / 2;
+
+            // Begrenzung
+            double clampedX = Math.max(halfW, Math.min(targetPane.getWidth() - halfW, newX));
+            double clampedY = Math.max(halfH, Math.min(targetPane.getHeight() - halfH, newY));
+
+            rect.setLayoutX(clampedX);
+            rect.setLayoutY(clampedY);
 
             System.out.printf("layoutX: %.2f, layoutY: %.2f%n", rect.getLayoutX(), rect.getLayoutY());
             System.out.printf("conf.x: %.2f, conf.y: %.2f%n", conf.x, conf.y);
-            System.out.printf("Real X: %f Real Y: %f\n", rect.getTranslateX(), rect.getTranslateY());
             System.out.println(height - newY);
         });
 
@@ -116,9 +128,27 @@ public class HelperUI {
             rect.setX(-rect.getWidth() / 2);
             rect.setY(-rect.getHeight() / 2);
 
+            // Berechnung Bounding-Box
+            double angle = Math.toRadians(rect.getRotate());
+            double w = rect.getWidth();
+            double h = rect.getHeight();
+
+            double rotatedWidth = Math.abs(w * Math.cos(angle)) + Math.abs(h * Math.sin(angle));
+            double rotatedHeight = Math.abs(w * Math.sin(angle)) + Math.abs(h * Math.cos(angle));
+            double halfW = rotatedWidth / 2;
+            double halfH = rotatedHeight / 2;
+
+            // Begrenzung der Position
+            double clampedX = Math.max(halfW, Math.min(targetPane.getWidth() - halfW, rect.getLayoutX()));
+            double clampedY = Math.max(halfH, Math.min(targetPane.getHeight() - halfH, rect.getLayoutY()));
+            rect.setLayoutX(clampedX);
+            rect.setLayoutY(clampedY);
+
             conf.width = (float) rect.getWidth() * px_to_m_scale;
             conf.height = (float) rect.getHeight() * px_to_m_scale;
             conf.angle = (float) -rect.getRotate();
+            conf.x = (float) clampedX * px_to_m_scale;
+            conf.y = (float)(targetPane.getHeight() - clampedY) * px_to_m_scale;
         });
 
         targetPane.getChildren().add(rect);
@@ -199,14 +229,20 @@ public class HelperUI {
         circle.setOnMouseDragged(e -> {
             double newX = e.getSceneX() - dragDelta.x;
             double newY = e.getSceneY() - dragDelta.y;
-            circle.setLayoutX(newX);
-            circle.setLayoutY(newY);
+            double r = circle.getRadius();
 
-            conf.x = (float) newX * px_to_m_scale;
-            conf.y = (float) (height - newY) * px_to_m_scale;
+            // Grenzen berechnen
+            double clampedX = Math.max(r, Math.min(targetPane.getWidth() - r, newX));
+            double clampedY = Math.max(r, Math.min(targetPane.getHeight() - r, newY));
+
+            circle.setLayoutX(clampedX);
+            circle.setLayoutY(clampedY);
+
+            conf.x = (float) clampedX * px_to_m_scale;
+            conf.y = (float) (height - clampedY) * px_to_m_scale;
 
             System.out.printf("Ball pos: layoutX=%.2f layoutY=%.2f -> conf.x=%.3f conf.y=%.3f%n",
-                    newX, newY, conf.x, conf.y);
+                    clampedX, clampedY, conf.x, conf.y);
         });
 
         // Radius ändern über Tastatur (z. B. W/S)
@@ -224,6 +260,19 @@ public class HelperUI {
             }
             circle.setRadius(newRadius);
             conf.radius = (float) (newRadius * px_to_m_scale);
+
+            // Ball-Position ggf. korrigieren, damit er nicht über Rand steht
+            double cx = circle.getLayoutX();
+            double cy = circle.getLayoutY();
+
+            double clampedX = Math.max(newRadius, Math.min(targetPane.getWidth() - newRadius, cx));
+            double clampedY = Math.max(newRadius, Math.min(targetPane.getHeight() - newRadius, cy));
+
+            circle.setLayoutX(clampedX);
+            circle.setLayoutY(clampedY);
+
+            conf.x = (float) clampedX * px_to_m_scale;
+            conf.y = (float)(height - clampedY) * px_to_m_scale;
         });
 
         targetPane.getChildren().add(circle);
@@ -261,14 +310,21 @@ public class HelperUI {
         circle.setOnMouseDragged(e -> {
             double newX = e.getSceneX() - dragDelta.x;
             double newY = e.getSceneY() - dragDelta.y;
-            circle.setLayoutX(newX);
-            circle.setLayoutY(newY);
 
-            startpoint.x = (float) newX * px_to_m_scale;
-            startpoint.y = (float) (height - newY) * px_to_m_scale;
+            double r = RADIUS_GAMEBALL_PX;
+
+            // Begrenzung, sodass Gameball nicht aus Pane ragt
+            double clampedX = Math.max(r, Math.min(targetPane.getWidth() - r, newX));
+            double clampedY = Math.max(r, Math.min(targetPane.getHeight() - r, newY));
+
+            circle.setLayoutX(clampedX);
+            circle.setLayoutY(clampedY);
+
+            startpoint.x = (float) clampedX * px_to_m_scale;
+            startpoint.y = (float)(height - clampedY) * px_to_m_scale;
 
             System.out.printf("StartPoint pos: layoutX=%.2f layoutY=%.2f -> conf.x=%.3f conf.y=%.3f%n",
-                    newX, newY, startpoint.x, startpoint.y);
+                    clampedX, clampedY, startpoint.x, startpoint.y);
         });
         targetPane.getChildren().add(circle);
         return startpoint;

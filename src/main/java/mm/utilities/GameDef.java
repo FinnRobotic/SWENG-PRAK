@@ -12,6 +12,9 @@ import org.jbox2d.dynamics.World;
 import java.util.ArrayList;
 import java.util.List;
 
+import static mm.utilities.Makros.RADIUS_GAMEBALL_PX;
+import static mm.utilities.Makros.px_to_m_scale;
+
 /**
  * Defines the core game configuration including physics simulation parameters,
  * current level details, and management of physical bodies in the simulation.
@@ -128,7 +131,8 @@ public class GameDef {
 
         float gameBallX = level.getStartPosition().x;
         float gameBallY = level.getStartPosition().y;
-        Ball GameBall = new Ball(gameBallX, gameBallY, 0.2f, 0, 1, 0.01f, world);
+        float radius = RADIUS_GAMEBALL_PX * px_to_m_scale;
+        Ball GameBall = new Ball(gameBallX, gameBallY, radius, 0, 1, 0.01f, world);
         addBody(GameBall);
 
         createBodies(world);

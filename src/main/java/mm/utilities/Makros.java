@@ -47,4 +47,8 @@ public class Makros {
     /** Default frames per second */
     public static final int FPS_DEFAULT = 120;
 
+
+
+    public static final int RADIUS_GAMEBALL_PX = 25;
+
 }
