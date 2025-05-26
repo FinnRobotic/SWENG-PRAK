@@ -1,9 +1,7 @@
 package mm.utilities;
 
 import mm.utilities.ObjectsConf.ObjectConf;
-import mm.utilities.PhysicsObjects.RigidBody;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +27,21 @@ public class Level {
 
     private Vec2 startPosition;
 
-    private int numSmallBox;
+    private int numSmallBox = 3;
 
-    private int numMediumBox;
+    private int numMediumBox = 3;
 
-    private int numBigBox;
+    private int numBigBox = 3;
 
-    private int  numSmallBall;
+    private int  numSmallBall = 3;
 
-    private int  numMediumBall;
+    private int  numMediumBall = 3;
 
-    private int  numBigBall;
+    private int  numBigBall = 3;
 
+    private WinCondition winCondition;
 
+    private float maxTime = 20;
 
     /**
      * Constructs a new Level with default settings:
@@ -53,6 +53,17 @@ public class Level {
         gravity = new Vec2(0, 0);
         objects = new ArrayList<>();
         startPosition = new Vec2(-1, -1);
+        numSmallBox = 3;
+        numMediumBox = 3;
+        numBigBox = 3;
+        numSmallBall = 3;
+        numMediumBall = 3;
+        numBigBall = 3;
+
+        winCondition = new WinCondition();
+        winCondition.winPosition = new Vec2(-1, -1);
+        winCondition.height = 0;
+        winCondition.width = 0;
     }
 
     /**
@@ -62,6 +73,10 @@ public class Level {
      */
     public void addObject(ObjectConf object) {
         objects.add(object);
+    }
+
+    public List<ObjectConf> getObjects() {
+        return objects;
     }
 
     /**
@@ -89,6 +104,10 @@ public class Level {
      */
     public Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 
     /**
@@ -136,11 +155,32 @@ public class Level {
      *
      * @return list of objects
      */
-    public List<ObjectConf> getObjects() {
-        return objects;
-    }
+
 
     public Vec2 getStartPosition() {
         return startPosition;
     }
+
+    public Boolean winConditionNotSet() {
+        return winCondition.winPosition.x == -1 || winCondition.winPosition.y == -1;
+    }
+
+    public void setWinCondition(WinCondition win) {
+        this.winCondition = win;
+    }
+
+    public WinCondition getWinCondition() {
+        return winCondition;
+    }
+
+    public float getMaxTime() {
+        return maxTime;
+    }
+
+    public void setMaxTime(float maxTime) {
+        this.maxTime = maxTime;
+    }
+
+
+
 }

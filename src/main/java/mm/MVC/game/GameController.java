@@ -31,5 +31,23 @@ public class GameController {
         view.getExitLevelBTN().setOnAction(e -> {
             viewManager.showStartView();
         });
+
+        view.getWonCloseLevelBTN().setOnAction(e -> {
+            viewManager.showStartView();
+        });
+
+        view.getLostCloseLevelBTN().setOnAction(e -> {
+            viewManager.showStartView();
+        });
+
+        view.getWonPlayAgainBTN().setOnAction(e -> {
+            view.getModel().resetLevel();
+        });
+
+        view.getLostPlayAgainBTN().setOnAction(e -> {
+            view.getModel().resetLevel();
+        });
+
+
     }
 }

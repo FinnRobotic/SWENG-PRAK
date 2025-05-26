@@ -4,10 +4,16 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import mm.MVC.View;
+import mm.MVC.game.elementsUI.GameLostDisplay;
+import mm.MVC.game.elementsUI.GameWonDisplay;
 import mm.MVC.game.elementsUI.SimView;
 import mm.MVC.start.StartModel;
 import mm.utilities.PhysicsObjects.RigidBody;
+import mm.utilities.WinCondition;
+import org.jbox2d.common.Vec2;
 
 import static mm.utilities.Makros.*;
 
@@ -25,11 +31,17 @@ import static mm.utilities.Makros.*;
 public class GameView extends View {
 
 
-    private Pane gamePane;
+    private StackPane gamePane;
 
     private SimView simView;
 
+    private GameWonDisplay gameWonDisplay;
+
+    private GameLostDisplay gameLostDisplay;
+
     private GameModel model;
+
+    private Rectangle winField;
 
 
 
@@ -40,9 +52,16 @@ public class GameView extends View {
      */
     public GameView() {
 
-        gamePane = new Pane();
+        gamePane = new StackPane();
         gamePane.setPrefSize(GAMEPANE_HEIGHT, GAMEPANE_WIDTH);
         gamePane.setStyle("-fx-background-color: lightgray;");
+
+        gameWonDisplay = new GameWonDisplay();
+
+        gameLostDisplay = new GameLostDisplay();
+
+
+        gamePane.getChildren().addAll(gameWonDisplay.endDisplay, gameLostDisplay.endDisplay);
 
         gamePane.setOnMousePressed(e -> {
             System.out.println("Mouse pressed at sceneX=" + e.getSceneX() + ", sceneY=" + e.getSceneY());
@@ -55,6 +74,7 @@ public class GameView extends View {
         layout.setLeft(simView.sideBarLeft);
         layout.setRight(simView.sideBarRight);
         layout.setBottom(simView.bottomBar);
+
         setRoot(layout);
     }
 
@@ -102,6 +122,11 @@ public class GameView extends View {
                     bd.getShape().setTranslateY(gamePane.getHeight() - bd.body.getPosition().y * m_to_px_scale);
                     bd.getShape().setRotate(-Math.toDegrees(bd.body.getAngle()));
                 }
+                winField.toFront();
+                if(checkGameOver(model.getGameDef().gameBall.getPosition(), model.getGameTime())) {
+                    model.toggleSimRunning();
+                    model.gameIsOver();
+                }
 
             }
         };
@@ -117,15 +142,19 @@ public class GameView extends View {
      */
     private void addChildren() {
         gamePane.getChildren().clear();
-        for(RigidBody bd : model.getGameDef().getBodies()) {
+
+        Pane simulationLayer = new Pane(); // Für Shapes
+        for (RigidBody bd : model.getGameDef().getBodies()) {
             bd.getShape().setTranslateY(gamePane.getHeight() - bd.body.getPosition().y * m_to_px_scale);
             bd.getShape().setTranslateX(bd.body.getPosition().x * m_to_px_scale);
             bd.getShape().setRotate(-Math.toDegrees(bd.body.getAngle()));
-            gamePane.getChildren().add(bd.getShape());
+            simulationLayer.getChildren().add(bd.getShape());
         }
-        for(Node sh : gamePane.getChildren()) {
-            System.out.println(sh.getTranslateX()  +", " +sh.getTranslateY());
-        };
+
+        createWinField(model.getGameDef().currentLevel.getWinCondition());
+        simulationLayer.getChildren().add(winField);
+
+        gamePane.getChildren().addAll(simulationLayer, gameWonDisplay.endDisplay, gameLostDisplay.endDisplay);
     }
 
     /**
@@ -148,6 +177,8 @@ public class GameView extends View {
     public void setModel(GameModel model) {
         this.model = model;
         model.addObserver(this);
+
+
 
     }
 
@@ -172,6 +203,29 @@ public class GameView extends View {
         return simView.exitLevel;
     }
 
+    public Button getWonCloseLevelBTN() {
+        return gameWonDisplay.toStartScreen;
+    }
+
+    public Button getLostCloseLevelBTN() {
+        return gameLostDisplay.toStartScreen;
+    }
+
+    public Button getWonPlayAgainBTN() {
+        return gameWonDisplay.playAgain;
+    }
+
+    public Button getLostPlayAgainBTN() {
+        return gameLostDisplay.playAgain;
+    }
+
+    public Button getWonDifferentLvlBTN() {
+        return gameWonDisplay.differentLevel;
+    }
+
+    public Button getLostDifferentLvlBTN() {
+        return gameLostDisplay.differentLevel;
+    }
 
     /**
      * Called when the model notifies observers to update the view.
@@ -185,7 +239,7 @@ public class GameView extends View {
     public void update() {
         double paneHeight = gamePane.getHeight();
 
-        if(model.isResetLevel()) {
+        if(model.isResetLevel() && !model.isGameOver()) {
 
             simView.gameTimer.stop();
 
@@ -199,12 +253,7 @@ public class GameView extends View {
             model.toogleResetLevel();
         }
 
-
-
-
-
-
-        if(!model.isSimRunning()) {
+        if(!model.isSimRunning() && !model.isGameOver()) {
 
             simView.gameTimer.stop();
             simView.btnStartStop.setText("Start");
@@ -214,10 +263,81 @@ public class GameView extends View {
             model.resetAccumulator();
             model.setLastUpdate(0);
 
-        } else {
+        } else if(model.isSimRunning() && !model.isGameOver()) {
             simView.gameTimer.start();
             simView.btnStartStop.setText("Stop");
 
+        }
+
+        if(model.isGameOver()) {
+
+            if (model.gameWon()) {
+                gameWonDisplay.setTotalTimeLabel(model.getGameTime());
+                gameWonDisplay.endDisplay.setVisible(true);
+                gameWonDisplay.endDisplay.toFront();
+            } else {
+                gameLostDisplay.setTotalTimeLabel(model.getGameTime());
+                gameLostDisplay.endDisplay.setVisible(true);
+                gameLostDisplay.endDisplay.toFront();
+            }
+
+        }
+    }
+
+    private void createWinField(WinCondition winCondition) {
+
+        double height = winCondition.height;
+        double width = winCondition.width;
+        double x = winCondition.winPosition.x;
+        double y = winCondition.winPosition.y;
+
+        double paneHeight = gamePane.getHeight();
+
+        winField = new Rectangle(width* m_to_px_scale, height * m_to_px_scale, Color.RED);
+        winField.setX(-width* m_to_px_scale/ 2.0f);
+        winField.setY(-height* m_to_px_scale/ 2.0f);
+        winField.setTranslateX(x * m_to_px_scale);
+        winField.setTranslateY(paneHeight - y * m_to_px_scale);
+
+        winField.setOpacity(0.4f);
+        winField.setStroke(Color.DARKGRAY);
+        winField.setStrokeWidth(5);
+
+        gamePane.getChildren().add(winField);
+        winField.toFront();
+    }
+
+
+    private Boolean checkGameOver(Vec2 gameBallPos, float currentTime) {
+
+        WinCondition win = model.getGameDef().currentLevel.getWinCondition();
+
+        float ballLeft   = gameBallPos.x - RADIUS_GAMEBALL_PX * px_to_m_scale;
+        float ballRight  = gameBallPos.x + RADIUS_GAMEBALL_PX * px_to_m_scale;
+        float ballBottom = gameBallPos.y - RADIUS_GAMEBALL_PX * px_to_m_scale;
+        float ballTop    = gameBallPos.y + RADIUS_GAMEBALL_PX * px_to_m_scale;
+
+        float winLeft   = win.winPosition.x - win.width / 2;
+        float winRight  = win.winPosition.x + win.width / 2;
+        float winBottom = win.winPosition.y - win.height / 2;
+        float winTop    = win.winPosition.y + win.height / 2;
+
+        if(
+
+            ballLeft   >= winLeft &&
+                    ballRight  <= winRight &&
+                    ballBottom >= winBottom &&
+                    ballTop    <= winTop
+
+        ) {
+            return model.gameWon();
+
+        } else if(model.getGameDef().currentLevel.getMaxTime() < currentTime) {
+
+            return model.gameLost();
+
+        } else {
+            return false;
         }
     }
 }

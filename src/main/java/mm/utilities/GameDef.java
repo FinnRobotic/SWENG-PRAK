@@ -33,9 +33,6 @@ public class GameDef {
 
         this.positionIterations = 4;
 
-        this.worldSizeX = 10;
-
-        this.worldSizeY = 10;
 
     }
 
@@ -45,17 +42,11 @@ public class GameDef {
 
     public List<RigidBody> bodies = new ArrayList<>();
 
-    public Vec2 gravity;
-
-    public Difficulty difficulty;
-
     public int velocityIterations;
 
     public int positionIterations;
 
-    public int worldSizeX;
-
-    public int worldSizeY;
+    public Ball gameBall;
 
     /**
      * Adds a rigid body to the simulation.
@@ -132,14 +123,10 @@ public class GameDef {
         float gameBallX = level.getStartPosition().x;
         float gameBallY = level.getStartPosition().y;
         float radius = RADIUS_GAMEBALL_PX * px_to_m_scale;
-        Ball GameBall = new Ball(gameBallX, gameBallY, radius, 0, 1, 0.01f, world);
-        addBody(GameBall);
+        gameBall = new Ball(gameBallX, gameBallY, radius, 0, 1, 0.01f, world);
+        addBody(gameBall);
 
         createBodies(world);
-
-        difficulty = level.getDifficulty();
-
-        gravity = level.getGravity();
 
     }
 

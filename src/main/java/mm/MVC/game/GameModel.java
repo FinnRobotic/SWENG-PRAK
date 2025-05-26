@@ -29,6 +29,8 @@ public class GameModel extends Observable {
     private float accumulator;
     private boolean simRunning;
     private boolean resetLevel;
+    private boolean gameOver;
+    private boolean gameWon;
 
     private GameDef gameDef;
 
@@ -54,6 +56,8 @@ public class GameModel extends Observable {
         // Integrate level objects into physics world and GameDef bodies list
         this.gameDef.integrateLevel(level, world);
 
+        gameWon = false;
+        gameOver = false;
 
     }
 
@@ -160,6 +164,29 @@ public class GameModel extends Observable {
     public void toogleResetLevel() {
         this.resetLevel = !this.resetLevel;
     }
+
+    public void gameIsOver() {
+        this.gameOver = true;
+        notifyObservers();
+    }
+
+    public boolean gameWon() {
+        gameWon = true;
+        return true;
+    }
+
+    public boolean gameLost() {
+        gameWon = false;
+        return true;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
 
 
     /**

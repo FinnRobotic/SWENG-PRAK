@@ -14,5 +14,7 @@ module mm {
     opens mm.utilities to com.google.gson;
     opens mm.utilities.PhysicsObjects to com.google.gson;
     exports mm.utilities.ObjectsConf;
+    opens mm.utilities.ObjectsConf to com.google.gson;
+    exports mm.utilities;
 
 }

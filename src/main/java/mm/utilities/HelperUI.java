@@ -1,7 +1,6 @@
 package mm.utilities;
 
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -54,8 +53,8 @@ public class HelperUI {
         rect.setLayoutY(200);
 
         // Initialwerte im Conf-Objekt
-        conf.x = (GAMEPANE_HEIGHT - 200) * px_to_m_scale;
-        conf.y = 200 * px_to_m_scale;
+        conf.x = 200 * px_to_m_scale;
+        conf.y = (height - 200) * px_to_m_scale;;
         conf.width = 100 * px_to_m_scale;
         conf.height = 50 * px_to_m_scale;
         conf.angle = 0;
@@ -96,6 +95,9 @@ public class HelperUI {
 
             rect.setLayoutX(clampedX);
             rect.setLayoutY(clampedY);
+
+            conf.x = (float) clampedX * px_to_m_scale;
+            conf.y = (float) (height - clampedY) * px_to_m_scale;
 
             System.out.printf("layoutX: %.2f, layoutY: %.2f%n", rect.getLayoutX(), rect.getLayoutY());
             System.out.printf("conf.x: %.2f, conf.y: %.2f%n", conf.x, conf.y);
@@ -329,6 +331,123 @@ public class HelperUI {
         targetPane.getChildren().add(circle);
         return startpoint;
     }
+
+
+    public static WinCondition addDraggableWinCondition(Pane targetPane) {
+
+        float height = (float)targetPane.getHeight();
+
+        WinCondition winCondition = new WinCondition();
+
+        Rectangle rect = new Rectangle(200, 200);
+        rect.setFill(Color.VIOLET);
+        rect.setStroke(Color.BLACK);
+        rect.setOpacity(0.4);
+
+        // Ursprung in der Mitte des Rechtecks
+        rect.setX(-rect.getWidth() / 2);
+        rect.setY(-rect.getHeight() / 2);
+
+        // Anfangsposition im Pane
+        rect.setLayoutX(200);
+        rect.setLayoutY(200);
+
+        // Initialwerte im Conf-Objekt
+        winCondition.winPosition.x = 200 * px_to_m_scale;
+        winCondition.winPosition.y = (height - 200) * px_to_m_scale;
+        winCondition.height = 200 * px_to_m_scale;
+        winCondition.width = 200 * px_to_m_scale;
+
+        // Drag-Deltas
+        final class Delta {
+            double x, y;
+        }
+        Delta dragDelta = new Delta();
+
+        rect.setOnMousePressed(e -> {
+            rect.requestFocus();
+            dragDelta.x = e.getSceneX() - rect.getLayoutX();
+            dragDelta.y = e.getSceneY() - rect.getLayoutY();
+        });
+
+
+
+        rect.setOnMouseDragged(e -> {
+            double newX = e.getSceneX() - dragDelta.x;
+            double newY = e.getSceneY() - dragDelta.y;
+
+            double w = rect.getWidth();
+            double h = rect.getHeight();
+
+
+
+            // Halbe Breite/Höhe für spätere Begrenzung (da Mittelpunkt gesetzt wird)
+            double halfW = w / 2;
+            double halfH = h / 2;
+
+            // Begrenzung
+            double clampedX = Math.max(halfW, Math.min(targetPane.getWidth() - halfW, newX));
+            double clampedY = Math.max(halfH, Math.min(targetPane.getHeight() - halfH, newY));
+
+            rect.setLayoutX(clampedX);
+            rect.setLayoutY(clampedY);
+
+            winCondition.winPosition.x = (float)clampedX * px_to_m_scale;
+
+            winCondition.winPosition.y = (height - (float)clampedY) * px_to_m_scale;
+
+            System.out.printf("layoutX: %.2f, layoutY: %.2f%n", rect.getLayoutX(), rect.getLayoutY());
+            System.out.printf("win.x: %.2f, win.y: %.2f%n", winCondition.winPosition.x, winCondition.winPosition.y);
+            System.out.println(height - newY);
+        });
+
+        rect.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case W:
+                    rect.setHeight(rect.getHeight() - 5);
+                    break;
+                case S:
+                    rect.setHeight(rect.getHeight() + 5);
+                    break;
+                case A:
+                    rect.setWidth(rect.getWidth() - 5);
+                    break;
+                case D:
+                    rect.setWidth(rect.getWidth() + 5);
+                    break;
+                default:
+                    break;
+            }
+            rect.setX(-rect.getWidth() / 2);
+            rect.setY(-rect.getHeight() / 2);
+
+            // Berechnung Bounding-Box
+            double w = rect.getWidth();
+            double h = rect.getHeight();
+
+
+            double halfW = w / 2;
+            double halfH = h / 2;
+
+            // Begrenzung der Position
+            double clampedX = Math.max(halfW, Math.min(targetPane.getWidth() - halfW, rect.getLayoutX()));
+            double clampedY = Math.max(halfH, Math.min(targetPane.getHeight() - halfH, rect.getLayoutY()));
+            rect.setLayoutX(clampedX);
+            rect.setLayoutY(clampedY);
+
+            winCondition.width = (float) rect.getWidth() * px_to_m_scale;
+            winCondition.height = (float) rect.getHeight() * px_to_m_scale;
+
+            winCondition.winPosition.x = (float) clampedX * px_to_m_scale;
+            winCondition.winPosition.y = (float)(targetPane.getHeight() - clampedY) * px_to_m_scale;
+        });
+
+        targetPane.getChildren().add(rect);
+        rect.toFront();
+
+        return winCondition;
+    }
+
 
 
 }

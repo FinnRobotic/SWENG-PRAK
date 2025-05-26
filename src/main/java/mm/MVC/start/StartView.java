@@ -235,6 +235,10 @@ public class StartView extends View {
     public Button getStartPointButton() {
         return levelBuilder.placeStart;
     }
+
+    public Button getWinConditionButton() {
+        return levelBuilder.placeWin;
+    }
     /**
      * Returns the current StartModel associated with this view.
      *

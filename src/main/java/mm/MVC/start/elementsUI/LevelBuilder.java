@@ -28,6 +28,7 @@ public class LevelBuilder {
     public Button placeBox = new Button("Box");
     public Button placeBall = new Button("Ball");
     public Button placeStart = new Button("StartPoint");
+    public Button placeWin = new Button("WinField");
     public Button exitButton = new Button("Exit");
     public TextField gravityXInput = new TextField();
     public TextField gravityYInput = new TextField();
@@ -95,7 +96,8 @@ public class LevelBuilder {
                 new Label("Boxen:"),
                 boxCountersRow,
                 new Label("Bälle:"),
-                ballCountersRow
+                ballCountersRow,
+                placeWin
                 );
 
 

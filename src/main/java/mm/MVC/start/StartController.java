@@ -135,7 +135,8 @@ public class StartController {
             level.getStartPosition().x = level.getStartPosition().x * (float)view.getBuilder().getWidth() / 100;
             level.getStartPosition().y = level.getStartPosition().y * (float)view.getBuilder().getHeight() / 100;
 
-
+            level.getWinCondition().winPosition.x = level.getWinCondition().winPosition.x * (float)view.getBuilder().getWidth() / 100;
+            level.getWinCondition().winPosition.y = level.getWinCondition().winPosition.y * (float)view.getBuilder().getHeight() / 100;
 
             viewManager.showGameView(level,view.getModel().getGameDef());
 
@@ -149,10 +150,10 @@ public class StartController {
         // Save settings from UI controls and toggle settings popup off
         view.getSaveSettingsButton().setOnAction(e -> {
             GameDef gameDef = view.getModel().getGameDef();
-            gameDef.difficulty = view.getDifficultyBox().getValue();
+            gameDef.currentLevel.setDifficulty(view.getDifficultyBox().getValue());
             gameDef.FPS = (int) view.getFpsSlider().getValue();
 
-            System.out.println("Settings saved: Difficulty = " + gameDef.difficulty + ", FPS = " + gameDef.FPS);
+            System.out.println("Settings saved: Difficulty = " + gameDef.currentLevel.getDifficulty() + ", FPS = " + gameDef.FPS);
             view.getModel().toggleSettings();
         });
 
@@ -186,6 +187,14 @@ public class StartController {
             if(view.getModel().getBuilderLevel().StartPositionNotSet()) {
 
                 view.getModel().getBuilderLevel().setStartPosition(addDraggableStartPoint(view.getBuilder()));
+            }
+        });
+
+        view.getWinConditionButton().setOnAction(e -> {
+
+            if(view.getModel().getBuilderLevel().winConditionNotSet()) {
+
+                view.getModel().getBuilderLevel().setWinCondition(addDraggableWinCondition(view.getBuilder()));
             }
         });
     }

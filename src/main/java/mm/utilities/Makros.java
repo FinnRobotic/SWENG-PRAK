@@ -49,6 +49,6 @@ public class Makros {
 
 
 
-    public static final int RADIUS_GAMEBALL_PX = 25;
+    public static final int RADIUS_GAMEBALL_PX = 15;
 
 }
